@@ -1,0 +1,38 @@
+// schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated/client"
+}
+
+// Define the database connection
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL") // Use your PostgreSQL connection URL
+}
+
+// Define your data models
+
+model User {
+  id       Int      @id @default(autoincrement())
+  username String
+  email    String   @unique
+  password String
+  // Add more user fields here (e.g., name, profile picture, etc.)
+
+  // Define the relationship with products
+  products Product[]
+}
+
+model Product {
+  id          Int     @id @default(autoincrement())
+  name        String
+  description String
+  price       Float
+  imageUrl     String
+  // Add more product fields here (e.g., category, brand, etc.)
+
+  // Define the relationship with users
+  userId      Int
+  user        User    @relation(fields: [userId], references: [id])
+}
