@@ -1,3 +1,11 @@
-import express from "express";
+interface Admin {
+  id: number;
+  username: string;
+  email: string;
+  password: string;
+  // Add more user details here
+}
 
-const router = express.Router();
+const admins: Admin[] = [];
+
+export { Admin, admins };

@@ -90,6 +90,6 @@ export const deleteAccount = async (req: Request, res: Response) => {
 };
 
 // Make sure to disconnect the Prisma client when the server shuts down
-process.on("SIGINT", () => {
-  prisma.$disconnect();
+process.on("SIGINT", async () => {
+  await prisma.$disconnect();
 });
