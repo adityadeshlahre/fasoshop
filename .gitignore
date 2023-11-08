@@ -8,6 +8,7 @@ package-lock.json
 dist
 .env
 generated
+migrations
 
 # testing
 coverage

@@ -7,6 +7,7 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {
+    "@prisma/nextjs-monorepo-workaround-plugin": "^5.5.2",
     "@types/cors": "^2.8.14",
     "@types/express": "^4.17.20",
     "@types/node": "^20.8.5",
@@ -29,6 +30,7 @@
   "dependencies": {
     "@prisma/client": "^5.5.2",
     "@types/jsonwebtoken": "^9.0.4",
+    "bcrypt": "^5.1.1",
     "dotenv": "^16.3.1",
     "dotenv-cli": "^7.3.0",
     "express-validator": "^7.0.1",

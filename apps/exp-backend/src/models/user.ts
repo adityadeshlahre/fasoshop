@@ -2,10 +2,10 @@ interface User {
   id: number;
   username: string;
   email: string;
-  password: string;
+  password: string | undefined;
   // Add more user details here
 }
 
-const users: User[] = [];
+const user: User[] = [];
 
-export { User, users };
+export { User, user };

@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "../../../../prisma/generated/client";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import bcrypt from "bcrypt";
 
 dotenv.config();
 
@@ -13,11 +14,6 @@ export const login = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
 
-    if (!JWT_SECRET) {
-      return res.status(500).json({ error: "JWT_SECRET is not defined" });
-    }
-
-    // Find the user by email in the database
     const user = await prisma.user.findUnique({
       where: { email },
     });
@@ -26,15 +22,26 @@ export const login = async (req: Request, res: Response) => {
       return res.status(401).json({ error: "Invalid credentials" });
     }
 
-    // Check if the provided password matches the stored password (you should hash and compare it)
-    if (password !== user.password) {
-      return res.status(401).json({ error: "Invalid credentials" });
-    }
+    // Compare the provided password with the hashed password
+    bcrypt.compare(password, user.password, (err, passwordMatch) => {
+      if (err) {
+        console.log("Error comparing passwords");
+        return res.status(500).json({ error: "Internal server error" });
+      }
 
-    // Generate a JWT token with the user's ID
-    const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: "1h" });
+      if (passwordMatch) {
+        // Passwords match, generate a JWT token
+        const token = jwt.sign({ id: user.id }, JWT_SECRET, {
+          expiresIn: "1h",
+        });
 
-    res.json({ token });
+        res.json({ token });
+      } else {
+        // Passwords do not match
+        console.log("Password did not match!");
+        res.status(401).json({ error: "Invalid credentials" });
+      }
+    });
   } catch (error) {
     console.error("Error during login:", error);
     res.status(500).json({ error: "Internal server error" });
@@ -43,7 +50,7 @@ export const login = async (req: Request, res: Response) => {
 
 export const register = async (req: Request, res: Response) => {
   try {
-    const { email, password } = req.body;
+    const { username, email, password } = req.body;
 
     if (!JWT_SECRET) {
       return res.status(500).json({ error: "JWT_SECRET is not defined" });
@@ -58,15 +65,24 @@ export const register = async (req: Request, res: Response) => {
       return res.status(400).json({ error: "Email is already in use" });
     }
 
-    // Create a new user and store it in the database
-    const newUser = await prisma.user.create({
-      data: {
-        email,
-        password, // In practice, you should hash the password
-      },
-    });
+    // Hash the password with bcrypt
+    bcrypt.hash(password, 10, async (err, hashedPassword) => {
+      if (err) {
+        console.log("Password hash error", err);
+        return res.status(500).json({ error: "Internal server error" });
+      }
 
-    res.json({ message: "User registered successfully" });
+      // Create a new user and store it in the database
+      const newUser = await prisma.user.create({
+        data: {
+          username: username,
+          email: email,
+          password: hashedPassword, // Use the hashed password
+        },
+      });
+
+      res.json({ newUser, message: "User registered successfully" });
+    });
   } catch (error) {
     console.error("Error during registration:", error);
     res.status(500).json({ error: "Internal server error" });

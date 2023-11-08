@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "../../../../prisma/generated/client";
 
 const prisma = new PrismaClient();
 
@@ -23,7 +23,7 @@ export const uploadImage = (req: Request, res: Response) => {
 // Implement product creation logic
 export const addProduct = async (req: Request, res: Response) => {
   try {
-    const { name, description, price, imageUrl } = req.body;
+    const { name, description, price, imageUrl, userId } = req.body;
 
     const newProduct = await prisma.product.create({
       data: {
@@ -31,7 +31,7 @@ export const addProduct = async (req: Request, res: Response) => {
         description,
         price,
         imageUrl,
-        // You might need to associate the product with a user if there is a user relationship
+        user: { connect: { id: userId } }, // Associate the product with the user
       },
     });
 
@@ -62,10 +62,10 @@ export const updatePrice = async (req: Request, res: Response) => {
 // Implement product deletion logic
 export const deleteProduct = async (req: Request, res: Response) => {
   try {
-    const productId = req.params.productId;
+    const productId = Number(req.params.productId);
 
     await prisma.product.delete({
-      where: { id: Number(productId) },
+      where: { id: productId },
     });
 
     res.status(204).send();

@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "../../../../prisma/generated/client";
 
 dotenv.config();
 
@@ -14,7 +14,7 @@ export const authenticateUser = (
   next: NextFunction
 ) => {
   // Get the token from the request header
-  const token = req.header("x-auth-token");
+  const token = req.header["token"];
 
   // Check if the token is missing
   if (!token) {
@@ -27,12 +27,13 @@ export const authenticateUser = (
 
   try {
     // Verify and decode the token
-    const decoded = jwt.verify(token, JWT_SECRET);
-
-    // Attach the user ID from the token to the request for future use
-    prisma.user = decoded;
-
-    // Continue to the next middleware or route handler
+    const decoded = jwt.verify(token, JWT_SECRET, (err, res) => {
+      if (err) {
+        console.log("ewre error");
+      } else {
+        prisma.user.id = decoded;
+      }
+    });
     next();
   } catch (error) {
     res.status(400).json({ error: "Invalid token." });
