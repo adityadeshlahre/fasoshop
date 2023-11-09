@@ -13,7 +13,7 @@ export const authenticateUser = (
   res: Response,
   next: NextFunction
 ) => {
-  const token: string | undefined = req.header("token");
+  const token = prisma.user.token || prisma.admin.token;
 
   if (!token) {
     return res.status(401).json({ error: "Access denied. No token provided." });
@@ -24,11 +24,10 @@ export const authenticateUser = (
   }
 
   try {
-    const decoded = jwt.verify(token, JWT_SECRET, (err, decoded) => {
+    const decoded = jwt.verify(token, JWT_SECRET, (err: any, decoded: any) => {
       if (err) {
         console.error("token error");
       } else {
-        prisma.user.token = decoded;
         console.log("Decoded Token:", decoded);
         next();
       }

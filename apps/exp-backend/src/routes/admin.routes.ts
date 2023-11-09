@@ -8,8 +8,6 @@ import { adminLogin, adminRegister } from "../controllers/auth.controller";
 import { authenticateUser } from "../middleware/auth.middleware";
 
 const router = express.Router();
-router.post("/register", adminRegister);
-router.post("/login", authenticateUser, adminLogin);
 router.get("/account", authenticateUser, getAccountDetails);
 router.put("/account", authenticateUser, editAccountDetails);
 router.delete("/account", authenticateUser, deleteAccount);

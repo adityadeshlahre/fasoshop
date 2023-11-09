@@ -42,9 +42,7 @@ export const register = async (req: Request, res: Response) => {
         },
       });
 
-      const token = generateToken(newUser.id);
-
-      res.json({ newUser, token, message: "User registered successfully" });
+      res.json({ newUser, message: "User registered successfully" });
     });
   } catch (error) {
     console.error("Error during registration:", error);
@@ -72,6 +70,8 @@ export const login = async (req: Request, res: Response) => {
 
       if (passwordMatch) {
         const token = generateToken(user.id);
+        prisma.user.token = token;
+        // localStorage.setItem("token", token);
 
         res.json({ token });
       } else {
@@ -111,9 +111,7 @@ export const adminRegister = async (req: Request, res: Response) => {
         },
       });
 
-      const token = generateToken(newAdmin.id);
-
-      res.json({ newAdmin, token, message: "Admin registered successfully" });
+      res.json({ newAdmin, message: "Admin registered successfully" });
     });
   } catch (error) {
     console.error("Error during admin registration:", error);
@@ -142,6 +140,8 @@ export const adminLogin = async (req: Request, res: Response) => {
 
       if (passwordMatch) {
         const token = generateToken(admin.id);
+        prisma.admin.token = token;
+        // localStorage.setItem("token", token);
 
         res.json({ token });
       } else {
