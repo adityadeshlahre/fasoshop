@@ -1,19 +1,22 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import { PrismaClient } from "../../../../prisma/generated/client";
 
 dotenv.config();
 
 const JWT_SECRET = process.env.JWT_SECRET;
-const prisma = new PrismaClient();
+declare module "express" {
+  interface Request {
+    userId?: number;
+  }
+}
 
 export const authenticateUser = (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const token = prisma.user.token || prisma.admin.token;
+  const token = req.header("token");
 
   if (!token) {
     return res.status(401).json({ error: "Access denied. No token provided." });
@@ -29,6 +32,7 @@ export const authenticateUser = (
         console.error("token error");
       } else {
         console.log("Decoded Token:", decoded);
+        req.userId = decoded.id;
         next();
       }
     });

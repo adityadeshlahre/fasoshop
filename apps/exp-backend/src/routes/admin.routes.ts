@@ -4,7 +4,6 @@ import {
   editAccountDetails,
   deleteAccount,
 } from "../controllers/user.controller";
-import { adminLogin, adminRegister } from "../controllers/auth.controller";
 import { authenticateUser } from "../middleware/auth.middleware";
 
 const router = express.Router();

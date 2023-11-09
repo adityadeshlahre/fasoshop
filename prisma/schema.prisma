@@ -19,6 +19,7 @@ model Admin {
   email     String   @unique
   password  String   // In practice, you should hash the password
   // Add more admin fields as needed
+  token     String?
 }
 
 model User {
@@ -26,6 +27,7 @@ model User {
   username String
   email    String   @unique
   password String
+  token    String?
   // Add more user fields here (e.g., name, profile picture, etc.)
 
   // Define the relationship with products

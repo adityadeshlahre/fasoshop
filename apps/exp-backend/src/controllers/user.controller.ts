@@ -5,11 +5,11 @@ const prisma = new PrismaClient();
 
 export const getAccountDetails = async (req: Request, res: Response) => {
   try {
-    const userId = prisma.user.id;
+    const userId = req.userId;
 
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      select: { id: true, username: true },
+      select: { id: true, username: true, email: true },
     });
 
     if (!user) {
@@ -25,7 +25,7 @@ export const getAccountDetails = async (req: Request, res: Response) => {
 
 export const editAccountDetails = async (req: Request, res: Response) => {
   try {
-    const userId = prisma.user.id;
+    const userId = req.userId;
     const updatedData = req.body;
     const updatedUser = await prisma.user.update({
       where: { id: userId },
@@ -41,7 +41,7 @@ export const editAccountDetails = async (req: Request, res: Response) => {
 
 export const deleteAccount = async (req: Request, res: Response) => {
   try {
-    const userId = prisma.user.id;
+    const userId = req.userId;
 
     await prisma.user.delete({
       where: { id: userId },

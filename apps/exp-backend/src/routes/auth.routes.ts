@@ -5,13 +5,12 @@ import {
   login,
   register,
 } from "../controllers/auth.controller";
-import { authenticateUser } from "../middleware/auth.middleware";
 
 const router = express.Router();
 
-router.post("/login", authenticateUser, login);
+router.post("/login", login);
 router.post("/register", register);
 router.post("/admin/register", adminRegister);
-router.post("/admin/login", authenticateUser, adminLogin);
+router.post("/admin/login", adminLogin);
 
 export default router;

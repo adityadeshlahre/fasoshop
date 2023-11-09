@@ -70,7 +70,10 @@ export const login = async (req: Request, res: Response) => {
 
       if (passwordMatch) {
         const token = generateToken(user.id);
-        prisma.user.token = token;
+        prisma.user.update({
+          where: { email: user.email },
+          data: { token: token },
+        });
         // localStorage.setItem("token", token);
 
         res.json({ token });
@@ -140,7 +143,10 @@ export const adminLogin = async (req: Request, res: Response) => {
 
       if (passwordMatch) {
         const token = generateToken(admin.id);
-        prisma.admin.token = token;
+        prisma.admin.update({
+          where: { email: admin.email },
+          data: { token: token },
+        });
         // localStorage.setItem("token", token);
 
         res.json({ token });
