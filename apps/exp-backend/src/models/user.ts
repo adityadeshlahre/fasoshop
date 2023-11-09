@@ -2,7 +2,7 @@ interface User {
   id: number;
   username: string;
   email: string;
-  password: string | undefined;
+  password: string;
   // Add more user details here
 }
 

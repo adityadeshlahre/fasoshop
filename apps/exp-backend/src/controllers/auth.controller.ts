@@ -1,14 +1,56 @@
 import { Request, Response } from "express";
-import { PrismaClient } from "../../../../prisma/generated/client";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import bcrypt from "bcrypt";
+import { PrismaClient } from "../../../../prisma/generated/client";
 
 dotenv.config();
 
 const JWT_SECRET = process.env.JWT_SECRET;
-
 const prisma = new PrismaClient();
+
+const generateToken = (id: number) => {
+  if (!JWT_SECRET) {
+    throw new Error("JWT_SECRET is not defined");
+  }
+  return jwt.sign({ id }, JWT_SECRET);
+};
+
+export const register = async (req: Request, res: Response) => {
+  try {
+    const { username, email, password } = req.body;
+
+    const existingUser = await prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (existingUser) {
+      return res.status(400).json({ error: "Email is already in use" });
+    }
+
+    bcrypt.hash(password, 10, async (err, hashedPassword) => {
+      if (err) {
+        console.log("Password hash error", err);
+        return res.status(500).json({ error: "Internal server error" });
+      }
+
+      const newUser = await prisma.user.create({
+        data: {
+          username,
+          email,
+          password: hashedPassword,
+        },
+      });
+
+      const token = generateToken(newUser.id);
+
+      res.json({ newUser, token, message: "User registered successfully" });
+    });
+  } catch (error) {
+    console.error("Error during registration:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
 
 export const login = async (req: Request, res: Response) => {
   try {
@@ -22,7 +64,6 @@ export const login = async (req: Request, res: Response) => {
       return res.status(401).json({ error: "Invalid credentials" });
     }
 
-    // Compare the provided password with the hashed password
     bcrypt.compare(password, user.password, (err, passwordMatch) => {
       if (err) {
         console.log("Error comparing passwords");
@@ -30,14 +71,10 @@ export const login = async (req: Request, res: Response) => {
       }
 
       if (passwordMatch) {
-        // Passwords match, generate a JWT token
-        const token = jwt.sign({ id: user.id }, JWT_SECRET, {
-          expiresIn: "1h",
-        });
+        const token = generateToken(user.id);
 
         res.json({ token });
       } else {
-        // Passwords do not match
         console.log("Password did not match!");
         res.status(401).json({ error: "Invalid credentials" });
       }
@@ -48,48 +85,76 @@ export const login = async (req: Request, res: Response) => {
   }
 };
 
-export const register = async (req: Request, res: Response) => {
+export const adminRegister = async (req: Request, res: Response) => {
   try {
     const { username, email, password } = req.body;
 
-    if (!JWT_SECRET) {
-      return res.status(500).json({ error: "JWT_SECRET is not defined" });
-    }
-
-    // Check if the email is already in use
-    const existingUser = await prisma.user.findUnique({
+    const existingAdminUser = await prisma.admin.findUnique({
       where: { email },
     });
 
-    if (existingUser) {
+    if (existingAdminUser) {
       return res.status(400).json({ error: "Email is already in use" });
     }
 
-    // Hash the password with bcrypt
     bcrypt.hash(password, 10, async (err, hashedPassword) => {
       if (err) {
         console.log("Password hash error", err);
         return res.status(500).json({ error: "Internal server error" });
       }
 
-      // Create a new user and store it in the database
-      const newUser = await prisma.user.create({
+      const newAdmin = await prisma.admin.create({
         data: {
-          username: username,
-          email: email,
-          password: hashedPassword, // Use the hashed password
+          username,
+          email,
+          password: hashedPassword,
         },
       });
 
-      res.json({ newUser, message: "User registered successfully" });
+      const token = generateToken(newAdmin.id);
+
+      res.json({ newAdmin, token, message: "Admin registered successfully" });
     });
   } catch (error) {
-    console.error("Error during registration:", error);
+    console.error("Error during admin registration:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
 
-// Make sure to disconnect the Prisma client when the server shuts down
+// Admin Login
+export const adminLogin = async (req: Request, res: Response) => {
+  try {
+    const { email, password } = req.body;
+
+    const admin = await prisma.admin.findUnique({
+      where: { email },
+    });
+
+    if (!admin) {
+      return res.status(401).json({ error: "Invalid credentials" });
+    }
+
+    bcrypt.compare(password, admin.password, (err, passwordMatch) => {
+      if (err) {
+        console.log("Error comparing passwords");
+        return res.status(500).json({ error: "Internal server error" });
+      }
+
+      if (passwordMatch) {
+        const token = generateToken(admin.id);
+
+        res.json({ token });
+      } else {
+        console.log("Password did not match!");
+        res.status(401).json({ error: "Invalid credentials" });
+      }
+    });
+  } catch (error) {
+    console.error("Error during admin login:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
 process.on("SIGINT", () => {
   prisma.$disconnect();
 });

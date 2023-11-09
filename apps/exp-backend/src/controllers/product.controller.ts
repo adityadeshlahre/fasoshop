@@ -3,7 +3,6 @@ import { PrismaClient } from "../../../../prisma/generated/client";
 
 const prisma = new PrismaClient();
 
-// Get and send all products
 export const getProducts = async (req: Request, res: Response) => {
   try {
     const products = await prisma.product.findMany();
@@ -14,13 +13,9 @@ export const getProducts = async (req: Request, res: Response) => {
   }
 };
 
-// Implement image upload logic
 export const uploadImage = (req: Request, res: Response) => {
-  // Implement image upload logic here, e.g., using multer or cloud-based storage
-  // Handle the file upload and store the image URL in the database
 };
 
-// Implement product creation logic
 export const addProduct = async (req: Request, res: Response) => {
   try {
     const { name, description, price, imageUrl, userId } = req.body;
@@ -31,7 +26,7 @@ export const addProduct = async (req: Request, res: Response) => {
         description,
         price,
         imageUrl,
-        user: { connect: { id: userId } }, // Associate the product with the user
+        user: { connect: { id: userId } },
       },
     });
 
@@ -42,7 +37,6 @@ export const addProduct = async (req: Request, res: Response) => {
   }
 };
 
-// Implement product price update logic
 export const updatePrice = async (req: Request, res: Response) => {
   try {
     const { productId, newPrice } = req.body;
@@ -58,8 +52,6 @@ export const updatePrice = async (req: Request, res: Response) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
-
-// Implement product deletion logic
 export const deleteProduct = async (req: Request, res: Response) => {
   try {
     const productId = Number(req.params.productId);
@@ -74,8 +66,6 @@ export const deleteProduct = async (req: Request, res: Response) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
-
-// Make sure to disconnect the Prisma client when the server shuts down
 process.on("SIGINT", () => {
   prisma.$disconnect();
 });

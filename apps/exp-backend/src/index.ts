@@ -1,18 +1,19 @@
-import express from 'express';
-import bodyParser from 'body-parser';
-import cors from 'cors';
-import authRoutes from './routes/auth.routes';
-import userRoutes from './routes/user.routes';
-import productRoutes from './routes/product.routes';
+import express from "express";
+import cors from "cors";
+import authRoutes from "./routes/auth.routes";
+import userRoutes from "./routes/user.routes";
+import productRoutes from "./routes/product.routes";
+import adminRoutes from "./routes/admin.routes";
 
 const app = express();
 
 app.use(cors());
-app.use(bodyParser.json());
+app.use(express.json());
 
-app.use('/auth', authRoutes);
-app.use('/user', userRoutes);
-app.use('/product', productRoutes);
+app.use("/auth", authRoutes);
+app.use("/admin", adminRoutes);
+app.use("/user", userRoutes);
+app.use("/product", productRoutes);
 
 app.listen(process.env.PORT, () => {
   console.log(`Server is running on port ${process.env.PORT}`);

@@ -13,10 +13,8 @@ export const authenticateUser = (
   res: Response,
   next: NextFunction
 ) => {
-  // Get the token from the request header
-  const token = req.header["token"];
+  const token: string | undefined = req.header("token");
 
-  // Check if the token is missing
   if (!token) {
     return res.status(401).json({ error: "Access denied. No token provided." });
   }
@@ -26,15 +24,15 @@ export const authenticateUser = (
   }
 
   try {
-    // Verify and decode the token
-    const decoded = jwt.verify(token, JWT_SECRET, (err, res) => {
+    const decoded = jwt.verify(token, JWT_SECRET, (err, decoded) => {
       if (err) {
-        console.log("ewre error");
+        console.error("token error");
       } else {
-        prisma.user.id = decoded;
+        prisma.user.token = decoded;
+        console.log("Decoded Token:", decoded);
+        next();
       }
     });
-    next();
   } catch (error) {
     res.status(400).json({ error: "Invalid token." });
   }
