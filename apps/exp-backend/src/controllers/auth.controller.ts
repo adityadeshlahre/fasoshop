@@ -19,21 +19,17 @@ const generateToken = (id: number) => {
 export const register = async (req: Request, res: Response) => {
   try {
     const { username, email, password } = req.body;
-
     const existingUser = await prisma.user.findUnique({
       where: { email },
     });
-
     if (existingUser) {
       return res.status(400).json({ error: "Email is already in use" });
     }
-
     bcrypt.hash(password, 10, async (err, hashedPassword) => {
       if (err) {
         console.log("Password hash error", err);
         return res.status(500).json({ error: "Internal server error" });
       }
-
       const newUser = await prisma.user.create({
         data: {
           username,
@@ -41,7 +37,6 @@ export const register = async (req: Request, res: Response) => {
           password: hashedPassword,
         },
       });
-
       res.json({ newUser, message: "User registered successfully" });
     });
   } catch (error) {
@@ -53,30 +48,31 @@ export const register = async (req: Request, res: Response) => {
 export const login = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
-
     const user = await prisma.user.findUnique({
       where: { email },
     });
-
     if (!user) {
       return res.status(401).json({ error: "Invalid credentials" });
     }
 
-    bcrypt.compare(password, user.password, (err, passwordMatch) => {
+    bcrypt.compare(password, user.password, async (err, passwordMatch) => {
       if (err) {
         console.log("Error comparing passwords");
         return res.status(500).json({ error: "Internal server error" });
       }
-
       if (passwordMatch) {
         const token = generateToken(user.id);
-        prisma.user.update({
-          where: { email: user.email },
-          data: { token: token },
-        });
-        // localStorage.setItem("token", token);
-
-        res.json({ token });
+        try {
+          await prisma.user.update({
+            where: { email: user.email },
+            data: { token: token },
+          });
+          res.json({ token });
+          // localStorage.setItem("token", token);
+        } catch (updateError) {
+          console.error("Error updating token:", updateError);
+          res.status(500).json({ error: "Internal server error" });
+        }
       } else {
         console.log("Password did not match!");
         res.status(401).json({ error: "Invalid credentials" });
@@ -91,21 +87,17 @@ export const login = async (req: Request, res: Response) => {
 export const adminRegister = async (req: Request, res: Response) => {
   try {
     const { username, email, password } = req.body;
-
     const existingAdminUser = await prisma.admin.findUnique({
       where: { email },
     });
-
     if (existingAdminUser) {
       return res.status(400).json({ error: "Email is already in use" });
     }
-
     bcrypt.hash(password, 10, async (err, hashedPassword) => {
       if (err) {
         console.log("Password hash error", err);
         return res.status(500).json({ error: "Internal server error" });
       }
-
       const newAdmin = await prisma.admin.create({
         data: {
           username,
@@ -113,7 +105,6 @@ export const adminRegister = async (req: Request, res: Response) => {
           password: hashedPassword,
         },
       });
-
       res.json({ newAdmin, message: "Admin registered successfully" });
     });
   } catch (error) {
@@ -126,30 +117,30 @@ export const adminRegister = async (req: Request, res: Response) => {
 export const adminLogin = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
-
     const admin = await prisma.admin.findUnique({
       where: { email },
     });
-
     if (!admin) {
       return res.status(401).json({ error: "Invalid credentials" });
     }
-
-    bcrypt.compare(password, admin.password, (err, passwordMatch) => {
+    bcrypt.compare(password, admin.password, async (err, passwordMatch) => {
       if (err) {
         console.log("Error comparing passwords");
         return res.status(500).json({ error: "Internal server error" });
       }
-
       if (passwordMatch) {
         const token = generateToken(admin.id);
-        prisma.admin.update({
-          where: { email: admin.email },
-          data: { token: token },
-        });
-        // localStorage.setItem("token", token);
-
-        res.json({ token });
+        try {
+          await prisma.admin.update({
+            where: { email: admin.email },
+            data: { token: token },
+          });
+          res.json({ token });
+          // localStorage.setItem("token", token);
+        } catch (updateError) {
+          console.error("Error updating token:", updateError);
+          res.status(500).json({ error: "Internal server error" });
+        }
       } else {
         console.log("Password did not match!");
         res.status(401).json({ error: "Invalid credentials" });

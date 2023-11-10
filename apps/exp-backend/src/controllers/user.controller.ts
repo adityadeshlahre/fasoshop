@@ -9,7 +9,7 @@ export const getAccountDetails = async (req: Request, res: Response) => {
 
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      select: { id: true, username: true, email: true },
+      select: { id: true, username: true, email: true, token: true },
     });
 
     if (!user) {
@@ -43,14 +43,22 @@ export const deleteAccount = async (req: Request, res: Response) => {
   try {
     const userId = req.userId;
 
+    const existingUser = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!existingUser) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
     await prisma.user.delete({
       where: { id: userId },
     });
 
-    res.status(204).send();
+    return res.status(204).send({ message: "Account deleted successfully" });
   } catch (error) {
     console.error("Error deleting account:", error);
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: "Internal server error" });
   }
 };
 process.on("SIGINT", () => {

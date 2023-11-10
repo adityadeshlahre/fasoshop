@@ -39,7 +39,7 @@ model Product {
   name        String
   description String
   price       Float
-  imageUrl     String
+  imageUrl    String
   // Add more product fields here (e.g., category, brand, etc.)
 
   // Define the relationship with users
