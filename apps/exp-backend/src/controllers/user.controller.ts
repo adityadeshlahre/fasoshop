@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import bcrypt from "bcrypt";
 import { PrismaClient } from "../../../../prisma/generated/client";
 
 const prisma = new PrismaClient();
@@ -9,7 +10,13 @@ export const getAccountDetails = async (req: Request, res: Response) => {
 
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      select: { id: true, username: true, email: true, token: true },
+      select: {
+        id: true,
+        username: true,
+        email: true,
+        password: true,
+        token: true,
+      },
     });
 
     if (!user) {
@@ -26,13 +33,43 @@ export const getAccountDetails = async (req: Request, res: Response) => {
 export const editAccountDetails = async (req: Request, res: Response) => {
   try {
     const userId = req.userId;
-    const updatedData = req.body;
-    const updatedUser = await prisma.user.update({
-      where: { id: userId },
-      data: updatedData,
-    });
+    const { password, ...updatedData } = req.body;
+    const user = await prisma.user.findUnique({ where: { id: userId } });
 
-    res.json(updatedUser);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    if (password) {
+      bcrypt.hash(password, 10, async (err: any, hashedPassword: any) => {
+        if (err) {
+          console.error("Error hashing password:", err);
+          return res.status(500).json({ error: "Internal server error" });
+        }
+
+        try {
+          const updatedUser = await prisma.user.update({
+            where: { id: userId },
+            data: { password: hashedPassword, ...updatedData },
+          });
+          res.json(updatedUser);
+        } catch (updateError) {
+          console.error("Error updating account:", updateError);
+          res.status(500).json({ error: "Internal server error" });
+        }
+      });
+    } else {
+      try {
+        const updatedUser = await prisma.user.update({
+          where: { id: userId },
+          data: updatedData,
+        });
+        res.json(updatedUser);
+      } catch (updateError) {
+        console.error("Error updating account:", updateError);
+        res.status(500).json({ error: "Internal server error" });
+      }
+    }
   } catch (error) {
     console.error("Error editing account details:", error);
     res.status(500).json({ error: "Internal server error" });
