@@ -29,8 +29,7 @@ export const authenticateUser = (req: any, res: any, next: NextFunction) => {
       } else {
         console.log("Decoded Token:", decoded);
         req.userId = decoded.id;
-        console.log(req.userId);
-        next(res.userId);
+        next();
       }
     });
   } catch (error) {

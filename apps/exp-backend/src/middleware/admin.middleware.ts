@@ -1,8 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import { PrismaClient } from "../../../../prisma/generated/client";
-const prisma = new PrismaClient();
 dotenv.config();
 
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -36,7 +34,6 @@ export const authenticateUser = (
     };
 
     req.userId = decoded.id;
-    req.isAdmin = isInAdminTable(); // Assuming the token has role info
 
     next();
   } catch (error) {
@@ -61,5 +58,3 @@ export const adminMiddleware = (
     isAdmin(req, res, next);
   });
 };
-
-function isInAdminTable(): boolean | undefined {}

@@ -3,7 +3,6 @@ import bcrypt from "bcrypt";
 import { PrismaClient } from "../../../../prisma/generated/client";
 
 const prisma = new PrismaClient();
-console.log("reached here");
 export const getAccountDetails = async (req: Request, res: Response) => {
   try {
     const userId = req.userId;

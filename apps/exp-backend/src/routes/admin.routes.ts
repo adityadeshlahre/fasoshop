@@ -3,7 +3,7 @@ import {
   getAccountDetails,
   editAccountDetails,
   deleteAccount,
-} from "../controllers/user.controller";
+} from "../controllers/admin.controller";
 import { authenticateUser } from "../middleware/auth.middleware";
 
 const router = express.Router();
