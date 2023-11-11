@@ -130,6 +130,7 @@ export const adminLogin = async (req: Request, res: Response) => {
       }
       if (passwordMatch) {
         const token = generateToken(admin.id);
+        console.log(token);
         try {
           await prisma.admin.update({
             where: { email: admin.email },

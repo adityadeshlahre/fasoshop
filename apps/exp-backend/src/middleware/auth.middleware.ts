@@ -11,11 +11,7 @@ declare module "express" {
   }
 }
 
-export const authenticateUser = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const authenticateUser = (req: any, res: any, next: NextFunction) => {
   const token = req.header("token");
 
   if (!token) {
@@ -33,7 +29,8 @@ export const authenticateUser = (
       } else {
         console.log("Decoded Token:", decoded);
         req.userId = decoded.id;
-        next();
+        console.log(req.userId);
+        next(res.userId);
       }
     });
   } catch (error) {
