@@ -26,7 +26,7 @@ export const addProduct = async (req: Request, res: Response) => {
         description,
         price,
         imageUrl,
-        user: { connect: { id: userId } },
+        user: { connect: { id: req.userId } },
       },
     });
 

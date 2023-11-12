@@ -5,13 +5,13 @@ import {
   updatePrice,
   deleteProduct,
 } from "../controllers/product.controller";
-import { authenticateUser } from "../middleware/auth.middleware";
+import { adminMiddleware } from "../middleware/admin.middleware";
 
 const router = express.Router();
 
 router.get("/products", getProducts);
-router.post("/products", authenticateUser, addProduct);
-router.put("/products/:id/price", authenticateUser, updatePrice);
-router.delete("/products/:id", authenticateUser, deleteProduct);
+router.post("/products", adminMiddleware, addProduct);
+router.put("/products/:id/price", adminMiddleware, updatePrice);
+router.delete("/products/:id", adminMiddleware, deleteProduct);
 
 export default router;

@@ -1,9 +1,11 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import { PrismaClient } from "../../../../prisma/generated/client";
 dotenv.config();
 
 const JWT_SECRET = process.env.JWT_SECRET;
+const prisma = new PrismaClient();
 
 declare module "express" {
   interface Request {
@@ -12,7 +14,7 @@ declare module "express" {
   }
 }
 
-export const authenticateUser = (
+const authenticateAdminUser = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -28,25 +30,39 @@ export const authenticateUser = (
   }
 
   try {
-    const decoded = jwt.verify(token, JWT_SECRET) as {
-      id: number;
-      role: string;
-    };
-
+    const decoded = jwt.verify(token, JWT_SECRET) as { id: number };
     req.userId = decoded.id;
-
     next();
   } catch (error) {
     res.status(400).json({ error: "Invalid token." });
   }
 };
 
-const isAdmin = (req: Request, res: Response, next: NextFunction) => {
-  if (req.isAdmin) {
-    next();
-  } else {
-    res.status(403).json({ error: "Access denied. Not an admin." });
+const isAdmin = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    console.log(req.userId);
+    if (req.userId) {
+      const admin = await prisma.admin.findUnique({
+        where: { id: req.userId },
+        select: { token: true },
+      });
+      console.log(admin);
+
+      if (admin && admin.token === req.header("token")) {
+        next();
+      } else {
+        res.status(403).json({ error: "Access denied. Not an admin." });
+      }
+    } else {
+      res.status(400).json({ error: "Invalid user ID." });
+    }
+    //localstorage.setItem("token",token)
+  } catch (error) {
+    console.error("Error verifying admin:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
+
+  res.status(403).json({ error: "Access denied. Not an admin." });
 };
 
 export const adminMiddleware = (
@@ -54,7 +70,7 @@ export const adminMiddleware = (
   res: Response,
   next: NextFunction
 ) => {
-  authenticateUser(req, res, () => {
+  authenticateAdminUser(req, res, () => {
     isAdmin(req, res, next);
   });
 };
