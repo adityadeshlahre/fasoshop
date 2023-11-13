@@ -40,15 +40,15 @@ const authenticateAdminUser = async (
 
 const isAdmin = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    console.log(req.userId);
-    if (req.userId) {
+    const userId = req.userId; // Retrieve userId from the request
+    if (userId) {
       const admin = await prisma.admin.findUnique({
-        where: { id: req.userId },
+        where: { id: userId },
         select: { token: true },
       });
-      console.log(admin);
 
-      if (admin && admin.token === req.header("token")) {
+      const token = req.header("token");
+      if (admin && admin.token === token) {
         next();
       } else {
         res.status(403).json({ error: "Access denied. Not an admin." });

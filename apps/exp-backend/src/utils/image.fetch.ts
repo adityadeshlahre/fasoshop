@@ -25,6 +25,7 @@ export const fetchImages = async (req: any, res: any) => {
 
       console.log(srcUrls);
       res.json(srcUrls);
+      return srcUrls;
     } else {
       res.json([]);
     }

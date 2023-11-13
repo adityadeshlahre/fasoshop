@@ -27,7 +27,6 @@ export const authenticateUser = (req: any, res: any, next: NextFunction) => {
       if (err) {
         console.error("token error");
       } else {
-        console.log("Decoded Token:", decoded);
         req.userId = decoded.id;
         next();
       }
