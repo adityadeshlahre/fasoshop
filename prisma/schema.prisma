@@ -20,6 +20,7 @@ model Admin {
   password  String   // In practice, you should hash the password
   // Add more admin fields as needed
   token     String?
+  products Product[]
 }
 
 model User {
@@ -31,7 +32,7 @@ model User {
   // Add more user fields here (e.g., name, profile picture, etc.)
 
   // Define the relationship with products
-  products Product[]
+  // products Product[]
 }
 
 model Product {
@@ -43,6 +44,9 @@ model Product {
   // Add more product fields here (e.g., category, brand, etc.)
 
   // Define the relationship with users
-  userId      Int
-  user        User    @relation(fields: [userId], references: [id])
+  // userId      Int
+  // user        User    @relation(fields: [userId], references: [id])
+  // Add a relation to Admin
+  adminId     Int
+  admin       Admin   @relation(fields: [adminId], references: [id])
 }

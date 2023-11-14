@@ -38,13 +38,20 @@ export const addProduct = async (req: Request, res: Response) => {
   }
 };
 
-export const updatePrice = async (req: Request, res: Response) => {
+export const updateProduct = async (req: Request, res: Response) => {
   try {
-    const { productId, newPrice } = req.body;
-
+    const productId: number = Number(req.params.id);
+    const { name, description, price, imageUrl } = req.body;
+    const userId: number | undefined = req.userId;
     const updatedProduct = await prisma.product.update({
       where: { id: productId },
-      data: { price: newPrice },
+      data: {
+        name,
+        description,
+        price,
+        imageUrl,
+        admin: { connect: { id: userId } },
+      },
     });
 
     res.json(updatedProduct);
@@ -55,7 +62,7 @@ export const updatePrice = async (req: Request, res: Response) => {
 };
 export const deleteProduct = async (req: Request, res: Response) => {
   try {
-    const productId = Number(req.params.productId);
+    const productId = Number(req.params.id);
 
     await prisma.product.delete({
       where: { id: productId },

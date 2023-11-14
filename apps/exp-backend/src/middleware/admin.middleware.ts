@@ -61,8 +61,6 @@ const isAdmin = async (req: Request, res: Response, next: NextFunction) => {
     console.error("Error verifying admin:", error);
     res.status(500).json({ error: "Internal server error" });
   }
-
-  res.status(403).json({ error: "Access denied. Not an admin." });
 };
 
 export const adminMiddleware = (

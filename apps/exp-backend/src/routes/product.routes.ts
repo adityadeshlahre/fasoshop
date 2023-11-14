@@ -2,7 +2,7 @@ import express from "express";
 import {
   getProducts,
   addProduct,
-  updatePrice,
+  updateProduct,
   deleteProduct,
 } from "../controllers/product.controller";
 import { adminMiddleware } from "../middleware/admin.middleware";
@@ -12,7 +12,7 @@ const router = express.Router();
 
 router.get("/products", getProducts);
 router.post("/products", adminMiddleware, addProduct);
-router.put("/products/:id/price", adminMiddleware, updatePrice);
+router.put("/products/:id", adminMiddleware, updateProduct);
 router.delete("/products/:id", adminMiddleware, deleteProduct);
 router.get("/img", fetchImages);
 
