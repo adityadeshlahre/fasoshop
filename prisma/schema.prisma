@@ -14,29 +14,31 @@ datasource db {
 // Define your data models
 
 model Admin {
-  id        Int      @id @default(autoincrement())
+  id        Int        @id @default(autoincrement())
   username  String
-  email     String   @unique
-  password  String   // In practice, you should hash the password
+  email     String     @unique
+  password  String // In practice, you should hash the password
   // Add more admin fields as needed
   token     String?
-  products Product[]
+  products  Product[]
+  cartItems CartItem[]
 }
 
 model User {
-  id       Int      @id @default(autoincrement())
+  id       Int     @id @default(autoincrement())
   username String
-  email    String   @unique
+  email    String  @unique
   password String
   token    String?
   // Add more user fields here (e.g., name, profile picture, etc.)
 
   // Define the relationship with products
   // products Product[]
+  cartItems CartItem[]
 }
 
 model Product {
-  id          Int     @id @default(autoincrement())
+  id          Int    @id @default(autoincrement())
   name        String
   description String
   price       Float
@@ -47,6 +49,18 @@ model Product {
   // userId      Int
   // user        User    @relation(fields: [userId], references: [id])
   // Add a relation to Admin
-  adminId     Int
-  admin       Admin   @relation(fields: [adminId], references: [id])
+  adminId   Int
+  admin     Admin      @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  cartItems CartItem[]
+}
+
+model CartItem {
+  id        Int     @id @default(autoincrement())
+  quantity  Int
+  productId Int
+  product   Product @relation(fields: [productId], references: [id])
+  adminId   Int?
+  admin     Admin?  @relation(fields: [adminId], references: [id])
+  userId    Int?
+  user      User?   @relation(fields: [userId], references: [id])
 }

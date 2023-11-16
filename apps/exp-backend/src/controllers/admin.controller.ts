@@ -74,8 +74,7 @@ export const editAccountDetails = async (req: any, res: any) => {
 
 export const deleteAccount = async (req: Request, res: Response) => {
   try {
-    const userId = req.userId;
-
+    const userId: number | undefined = req.userId;
     const existingUser = await prisma.admin.findUnique({
       where: { id: userId },
     });
@@ -84,7 +83,7 @@ export const deleteAccount = async (req: Request, res: Response) => {
       return res.status(404).json({ error: "User not found" });
     }
 
-    await prisma.user.delete({
+    await prisma.admin.delete({
       where: { id: userId },
     });
 

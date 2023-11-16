@@ -77,14 +77,3 @@ export const deleteProduct = async (req: Request, res: Response) => {
 process.on("SIGINT", () => {
   prisma.$disconnect();
 });
-
-export const myCart = async (req: Request, res: Response) => {
-  try {
-    const urls: any = await fetchImages(res,req);
-    console.log(urls[5]); // Logs the URL at the specified index
-    return urls[5];
-  } catch (error) {
-    console.error("Error: ", error);
-    return null;
-  }
-};

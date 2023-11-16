@@ -4,10 +4,10 @@ import {
   addProduct,
   updateProduct,
   deleteProduct,
-  myCart,
 } from "../controllers/product.controller";
 import { adminMiddleware } from "../middleware/admin.middleware";
 import { fetchImages } from "../utils/image.fetch";
+import { myCart } from "../utils/cart.fetch";
 
 const router = express.Router();
 
