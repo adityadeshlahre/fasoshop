@@ -20,6 +20,10 @@ export const addProduct = async (req: Request, res: Response) => {
   try {
     const { name, description, price, imageUrl } = req.body;
     const userId: number | undefined = req.userId;
+    const isAdmin = req.isAdmin;
+    if (!isAdmin) {
+      return res.status(403).json({ error: "Access denied. Not an admin." });
+    }
     const newProduct = await prisma.product.create({
       data: {
         name,
@@ -43,6 +47,10 @@ export const updateProduct = async (req: Request, res: Response) => {
     const productId: number = Number(req.params.id);
     const { name, description, price, imageUrl } = req.body;
     const userId: number | undefined = req.userId;
+    const isAdmin = req.isAdmin;
+    if (!isAdmin) {
+      return res.status(403).json({ error: "Access denied. Not an admin." });
+    }
     const updatedProduct = await prisma.product.update({
       where: { id: productId },
       data: {
@@ -63,7 +71,11 @@ export const updateProduct = async (req: Request, res: Response) => {
 export const deleteProduct = async (req: Request, res: Response) => {
   try {
     const productId = Number(req.params.id);
+    const isAdmin = req.isAdmin;
 
+    if (!isAdmin) {
+      return res.status(403).json({ error: "Access denied. Not an admin." });
+    }
     await prisma.product.delete({
       where: { id: productId },
     });

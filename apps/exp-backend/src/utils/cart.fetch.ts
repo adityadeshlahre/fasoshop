@@ -6,7 +6,7 @@ import { PrismaClient } from "../../../../prisma/generated/client";
 
 const prisma = new PrismaClient();
 
-export const myCart = async (req: Request, res: Response) => {
+export const cart = async (req: Request, res: Response) => {
   try {
     const urls: any = await fetchImages(res, req);
     console.log(urls[5]); // Logs the URL at the specified index

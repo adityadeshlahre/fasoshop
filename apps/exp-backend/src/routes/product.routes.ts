@@ -5,17 +5,17 @@ import {
   updateProduct,
   deleteProduct,
 } from "../controllers/product.controller";
-import { adminMiddleware } from "../middleware/admin.middleware";
+import { authenticateUser } from "../middleware/auth.middleware";
 import { fetchImages } from "../utils/image.fetch";
-import { myCart } from "../utils/cart.fetch";
+import { cart } from "../utils/cart.fetch";
 
 const router = express.Router();
 
 router.get("/products", getProducts);
-router.post("/products", adminMiddleware, addProduct);
-router.put("/products/:id", adminMiddleware, updateProduct);
-router.delete("/products/:id", adminMiddleware, deleteProduct);
+router.post("/products", authenticateUser, addProduct);
+router.put("/products/:id", authenticateUser, updateProduct);
+router.delete("/products/:id", authenticateUser, deleteProduct);
 router.get("/img", fetchImages);
-router.get("/mycart", myCart);
+router.get("/mycart", cart);
 
 export default router;

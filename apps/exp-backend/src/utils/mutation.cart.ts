@@ -1,3 +1,5 @@
+//need fix
+
 import { Request, Response } from "express";
 import { PrismaClient } from "../../../../prisma/generated/client";
 
@@ -81,6 +83,7 @@ export const getCartProductsHandler = async (req: Request, res: Response) => {
     if (!userId) {
       return res.status(400).json({ error: "Invalid request" });
     }
+    
 
     // Get products in the cart based on userId
     const cartProducts = await getCartProducts(userId);
