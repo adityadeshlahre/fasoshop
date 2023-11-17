@@ -26,6 +26,7 @@ export const fetchImages = async (req: any, res: any) => {
         .map((media: any) => media.src.small);
 
       console.log(srcUrls);
+      res.json(srcUrls);
       return;
     } else {
       res.json([]);
