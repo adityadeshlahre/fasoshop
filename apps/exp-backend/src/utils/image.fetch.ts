@@ -1,4 +1,4 @@
-// need fix
+//need fix
 
 import { createClient } from "pexels";
 import dotenv from "dotenv";
@@ -7,13 +7,20 @@ dotenv.config();
 
 const api = process.env.PEXELS || "";
 const client = createClient(api);
-const query = "fashion";
-const id = "xywsbzf";
 
 export const fetchImages = async (req: any, res: any) => {
   try {
+    const id = req.params.id;
+    const query = req.params.query;
+
+    if (id && query) {
+      return res
+        .status(400)
+        .json({ error: "Provide either 'id' or 'query', not both." });
+    }
+
     const photos = await client.collections.media({
-      id,
+      id: id || query,
       per_page: 15,
       type: "photos",
     });
