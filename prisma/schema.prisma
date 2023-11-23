@@ -22,6 +22,8 @@ model Admin {
   token     String?
   products  Product[]
   cartItems CartItem[]
+  order Order[]
+  orderHistory OrderHistory[]
 }
 
 model User {
@@ -35,6 +37,8 @@ model User {
   // Define the relationship with products
   // products Product[]
   cartItems CartItem[]
+  order Order[]
+  orderHistory OrderHistory[]
 }
 
 model Product {
@@ -52,6 +56,8 @@ model Product {
   adminId   Int
   admin     Admin      @relation(fields: [adminId], references: [id], onDelete: Cascade)
   cartItems CartItem[]
+  orderHistory OrderHistory[]
+  order Order[]
 }
 
 model CartItem {
@@ -63,4 +69,50 @@ model CartItem {
   admin     Admin?  @relation(fields: [adminId], references: [id])
   userId    Int?
   user      User?   @relation(fields: [userId], references: [id])
+}
+
+model Order {
+  id            Int      @id @default(autoincrement())
+  createdAt     DateTime @default(now())
+  status        String
+  total         Float
+  // Add more order fields as needed
+
+  // Relationship with User
+  userId        Int?
+  user          User?    @relation(fields: [userId], references: [id])
+
+  // Relationship with Admin
+  adminId       Int?
+  admin         Admin?   @relation(fields: [adminId], references: [id])
+
+  productId Int
+  product   Product @relation(fields: [productId], references: [id],onDelete: Cascade)
+
+  // Relationship with OrderHistory
+  orderHistory  OrderHistory[]
+}
+
+model OrderHistory {
+  id            Int      @id @default(autoincrement())
+  createdAt     DateTime @default(now())
+  status        String
+  total         Float
+  // Add more order history fields as needed
+
+  // Relationship with User
+  userId        Int?
+  user          User?    @relation(fields: [userId], references: [id])
+
+  // Relationship with Admin
+  adminId       Int?
+  admin         Admin?   @relation(fields: [adminId], references: [id])
+
+  // Relationship with Product
+  productId     Int
+  product       Product  @relation(fields: [productId], references: [id])
+
+  // Relationship with Order
+  orderId       Int?
+  order         Order?   @relation(fields: [orderId], references: [id])
 }
