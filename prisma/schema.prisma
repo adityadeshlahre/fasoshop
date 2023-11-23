@@ -14,15 +14,15 @@ datasource db {
 // Define your data models
 
 model Admin {
-  id        Int        @id @default(autoincrement())
-  username  String
-  email     String     @unique
-  password  String // In practice, you should hash the password
+  id           Int            @id @default(autoincrement())
+  username     String
+  email        String         @unique
+  password     String // In practice, you should hash the password
   // Add more admin fields as needed
-  token     String?
-  products  Product[]
-  cartItems CartItem[]
-  order Order[]
+  token        String?
+  products     Product[]
+  cartItems    CartItem[]
+  order        Order[]
   orderHistory OrderHistory[]
 }
 
@@ -36,8 +36,8 @@ model User {
 
   // Define the relationship with products
   // products Product[]
-  cartItems CartItem[]
-  order Order[]
+  cartItems    CartItem[]
+  order        Order[]
   orderHistory OrderHistory[]
 }
 
@@ -53,18 +53,18 @@ model Product {
   // userId      Int
   // user        User    @relation(fields: [userId], references: [id])
   // Add a relation to Admin
-  adminId   Int
-  admin     Admin      @relation(fields: [adminId], references: [id], onDelete: Cascade)
-  cartItems CartItem[]
+  adminId      Int
+  admin        Admin          @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  cartItems    CartItem[]
   orderHistory OrderHistory[]
-  order Order[]
+  order        Order[]
 }
 
 model CartItem {
   id        Int     @id @default(autoincrement())
   quantity  Int
   productId Int
-  product   Product @relation(fields: [productId], references: [id],onDelete: Cascade)
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
   adminId   Int?
   admin     Admin?  @relation(fields: [adminId], references: [id])
   userId    Int?
@@ -72,47 +72,49 @@ model CartItem {
 }
 
 model Order {
-  id            Int      @id @default(autoincrement())
-  createdAt     DateTime @default(now())
-  status        String
-  total         Float
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  status    String
+  total     Float
   // Add more order fields as needed
 
   // Relationship with User
-  userId        Int?
-  user          User?    @relation(fields: [userId], references: [id])
+  userId Int?
+  user   User? @relation(fields: [userId], references: [id])
 
   // Relationship with Admin
-  adminId       Int?
-  admin         Admin?   @relation(fields: [adminId], references: [id])
+  adminId Int?
+  admin   Admin? @relation(fields: [adminId], references: [id])
 
   productId Int
-  product   Product @relation(fields: [productId], references: [id],onDelete: Cascade)
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   // Relationship with OrderHistory
-  orderHistory  OrderHistory[]
+  orderHistory OrderHistory[]
 }
 
 model OrderHistory {
-  id            Int      @id @default(autoincrement())
-  createdAt     DateTime @default(now())
-  status        String
-  total         Float
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  status    String
+  total     Float
   // Add more order history fields as needed
 
   // Relationship with User
-  userId        Int?
-  user          User?    @relation(fields: [userId], references: [id])
+  userId Int?
+  user   User? @relation(fields: [userId], references: [id])
 
   // Relationship with Admin
-  adminId       Int?
-  admin         Admin?   @relation(fields: [adminId], references: [id])
+  adminId Int?
+  admin   Admin? @relation(fields: [adminId], references: [id])
 
   // Relationship with Product
-  productId     Int
-  product       Product  @relation(fields: [productId], references: [id])
+  productId Int
+  product   Product @relation(fields: [productId], references: [id])
 
   // Relationship with Order
-  orderId       Int?
-  order         Order?   @relation(fields: [orderId], references: [id])
+  orderId Int?
+  order   Order? @relation(fields: [orderId], references: [id])
 }

@@ -6,6 +6,7 @@ import productRoutes from "./routes/product.routes";
 import adminRoutes from "./routes/admin.routes";
 import cartRoutes from "./routes/cart.routes";
 import imgRoutes from "./routes/img.routes";
+import order from "./routes/order.routes";
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.use("/user", userRoutes);
 app.use("/product", productRoutes);
 app.use("/cart", cartRoutes);
 app.use("/img", imgRoutes); //testing routes for random images
+app.use("/order", order); //order route fix needed
 
 app.listen(process.env.PORT, () => {
   console.log(`Server is running on port ${process.env.PORT}`);
