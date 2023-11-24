@@ -9,7 +9,6 @@ dist
 .env
 generated
 migrations
-fasoshop.postman_collection.json
 
 # testing
 coverage

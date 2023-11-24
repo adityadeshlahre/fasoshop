@@ -1,0 +1,626 @@
+{
+	"info": {
+		"_postman_id": "034b2d05-c30c-419b-8730-578964f2a80a",
+		"name": "fasoshop",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28045958"
+	},
+	"item": [
+		{
+			"name": "userCase",
+			"item": [
+				{
+					"name": "register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\" :  \"asdasd1212\",\n    \"email\" : \"asdasd1212@asd.com\",\n    \"password\" : \"hashpass\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BURL}}auth/register",
+							"host": [
+								"{{BURL}}auth"
+							],
+							"path": [
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\" : \"asdasd1212@asd.com\",\n    \"password\" : \"hashpass\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BURL}}auth/login",
+							"host": [
+								"{{BURL}}auth"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "userAccount",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaWF0IjoxNzAwMTY1MTkxfQ.wbaXBQTUPDeGa1X_BKAVABpGzHRrqnR3Y89_3WA0zGA",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{BURL}}user/account",
+							"host": [
+								"{{BURL}}user"
+							],
+							"path": [
+								"account"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "userAccEdit",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaWF0IjoxNzAwMTY1MTkxfQ.wbaXBQTUPDeGa1X_BKAVABpGzHRrqnR3Y89_3WA0zGA",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\" :  \"1212ads\",\n    \"email\" : \"1212asdasd@asd.com\",\n    \"password\" : \"hashpass\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BURL}}user/account",
+							"host": [
+								"{{BURL}}user"
+							],
+							"path": [
+								"account"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "userAcc",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaWF0IjoxNzAwMTY1MTkxfQ.wbaXBQTUPDeGa1X_BKAVABpGzHRrqnR3Y89_3WA0zGA",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{BURL}}user/account",
+							"host": [
+								"{{BURL}}user"
+							],
+							"path": [
+								"account"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "adminCase",
+			"item": [
+				{
+					"name": "adminRegister",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\" :  \"234\",\n    \"email\" : \"sdfauih354@asd.com\",\n    \"password\" : \"hashpass\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BURL}}auth/admin/register",
+							"host": [
+								"{{BURL}}auth"
+							],
+							"path": [
+								"admin",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "adminLogin",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\" : \"sdfauih354@asd.com\",\n    \"password\" : \"hashpass\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BURL}}auth/admin/login",
+							"host": [
+								"{{BURL}}auth"
+							],
+							"path": [
+								"admin",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "adminAccount",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OSwiaWF0IjoxNzAwMTY1MjMxfQ.MWFa-cnqDtePEh-Pqe820RLs6hFY27mghRAqdBXLsv8",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{BURL}}admin/account",
+							"host": [
+								"{{BURL}}admin"
+							],
+							"path": [
+								"account"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "adminAccEdit",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OSwiaWF0IjoxNzAwMTY1MjMxfQ.MWFa-cnqDtePEh-Pqe820RLs6hFY27mghRAqdBXLsv8",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\" :  \"2323\",\n    \"email\" : \"232323@asdd.com\",\n    \"password\" : \"hashpass\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BURL}}admin/account",
+							"host": [
+								"{{BURL}}admin"
+							],
+							"path": [
+								"account"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "adminAcc",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OSwiaWF0IjoxNzAwMTY1MjMxfQ.MWFa-cnqDtePEh-Pqe820RLs6hFY27mghRAqdBXLsv8",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{BURL}}admin/account",
+							"host": [
+								"{{BURL}}admin"
+							],
+							"path": [
+								"account"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "product",
+			"item": [
+				{
+					"name": "getProducts",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BURL}}product/products",
+							"host": [
+								"{{BURL}}product"
+							],
+							"path": [
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "setProducts",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTAsImlhdCI6MTcwMDE2NTM0Mn0.X-TkpdlYIQ1diZUHY-UfufeJJLqrkRuoYV1bcrF8gFo",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"ductpro\",\n  \"description\": \"This is for 123123423the pro122343duct.\",\n  \"price\": 3422343.99,\n  \"imageUrl\": \"http://assets.myntassets.com/v1/images/style/properties/7a5b82d1372a7a5c6de67ae7a314fd91_images.jpg\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BURL}}product/products/",
+							"host": [
+								"{{BURL}}product"
+							],
+							"path": [
+								"products",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateProducts",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTAsImlhdCI6MTcwMDE2NjQ0Mn0.xwxG96IXV6hX78ibrpRwA4Gr4UiC0Cx5CQqAwOvoXIg",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"productpwerioh1-up\",\n  \"description\": \"This is a product1 description for the product.-up\",\n  \"price\": 2292.99,\n  \"imageUrl\": \"http://assets.myntassets.com/v1/images/style/properties/7a5b82d1372a7a5c6de67ae7a314fd91_images.jpg\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BURL}}product/products/22",
+							"host": [
+								"{{BURL}}product"
+							],
+							"path": [
+								"products",
+								"22"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delProduct",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTAsImlhdCI6MTcwMDE2NjQ0Mn0.xwxG96IXV6hX78ibrpRwA4Gr4UiC0Cx5CQqAwOvoXIg",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BURL}}product/products/22",
+							"host": [
+								"{{BURL}}product"
+							],
+							"path": [
+								"products",
+								"22"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "pelexTest",
+			"item": [
+				{
+					"name": "pelexGetImgAllMyColl",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "OYIUxoeox0IhzCPAtcD0BY5E9yDaK97fnzRUdbrI43W1HnQWDwkQkaWE",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://api.pexels.com/v1/collections?per_page=20",
+							"protocol": "https",
+							"host": [
+								"api",
+								"pexels",
+								"com"
+							],
+							"path": [
+								"v1",
+								"collections"
+							],
+							"query": [
+								{
+									"key": "per_page",
+									"value": "20"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "pelexGetImgWithId",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "OYIUxoeox0IhzCPAtcD0BY5E9yDaK97fnzRUdbrI43W1HnQWDwkQkaWE",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://api.pexels.com/v1/collections/xywsbzf",
+							"protocol": "https",
+							"host": [
+								"api",
+								"pexels",
+								"com"
+							],
+							"path": [
+								"v1",
+								"collections",
+								"xywsbzf"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "pelexGetImgLocalHost",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BURL}}product/img",
+							"host": [
+								"{{BURL}}product"
+							],
+							"path": [
+								"img"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "pelexGetImgLocalHostCart",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BURL}}product/mycart",
+							"host": [
+								"{{BURL}}product"
+							],
+							"path": [
+								"mycart"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "cartCases",
+			"item": [
+				{
+					"name": "productToBeAddToUsers",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNzAwMTY1NzU3fQ.pvNBX7u-5IgBlWJJ4Xmb4Ordr9nbMv_LzzdfQfVEHD4",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{BURL}}cart/list",
+							"host": [
+								"{{BURL}}cart"
+							],
+							"path": [
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "productToAddToUsers",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNzAwMTY4NjA4fQ.Zlk5gl4L9d9ZvF3cvwOoMJ3NoHSqMnUIhVauLC4IB1c",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{BURL}}cart/update/4",
+							"host": [
+								"{{BURL}}cart"
+							],
+							"path": [
+								"update",
+								"4"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
