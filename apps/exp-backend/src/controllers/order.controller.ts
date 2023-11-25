@@ -54,32 +54,47 @@ export const order = async (req: Request, res: Response) => {
         .status(400)
         .json({ error: "Invalid request, userId is missing" });
     }
-    const product = fetchProductsForSpecific(userId);
-    console.log(product);
+    const products = await fetchProductsForSpecific(userId);
+    console.log(products);
 
-    // const { productId, user } = req.body;
-    // const status = user === "yes" ? "completed" : "pending";
+    const { productId, status } = req.body;
 
-    // const order = await prisma.order.create({
-    //   data: {
-    //     userId,
-    //     adminId: null,
-    //     productId,
-    //     status,
-    //     total: 0,
-    //   },
-    // });
+    const orderStatus = status === "yes" ? "completed" : "pending";
 
-    // const cartItems = await prisma.cartItem.findMany({
-    //   where: { userId },
-    // });
+    const order = await prisma.order.create({
+      data: {
+        userId,
+        adminId: null,
+        productId,
+        status: orderStatus,
+        total: 0,
+      },
+    });
 
-    // await prisma.cartItem.updateMany({
-    //   where: { userId },
-    //   data: { quantity: 0 },
-    // });
+    if (status === "yes") {
+      const orderHistory = await prisma.orderHistory.create({
+        data: {
+          userId: order.userId,
+          adminId: order.adminId,
+          productId: order.productId,
+          status: "completed",
+          total: order.total,
+        },
+      });
 
-    res.json(product);
+      await prisma.order.delete({
+        where: {
+          id: order.id,
+        },
+      });
+    }
+
+    await prisma.cartItem.updateMany({
+      where: { userId },
+      data: { quantity: 0 },
+    });
+
+    res.json(products);
   } catch (error) {
     console.error("Error creating order:", error);
     res.status(500).json({ error: "Internal server error" });
