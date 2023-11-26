@@ -9,13 +9,18 @@ export const deleteCartProductHandler = async (req: Request, res: Response) => {
   try {
     const { id: productId } = req.params;
     const userId = req.userId;
+    const isAdmin = req.isAdmin || false;
 
     if (!userId || !productId) {
       return res.status(400).json({ error: "Invalid request" });
     }
 
     await prisma.cartItem.deleteMany({
-      where: { userId, productId: Number(productId) },
+      where: {
+        userId: isAdmin ? null : Number(userId),
+        adminId: isAdmin ? Number(userId) : null,
+        productId: Number(productId),
+      },
     });
 
     return res.status(200).json({ message: "Product deleted from the cart" });
@@ -30,13 +35,18 @@ export const updateQuantityHandler = async (req: Request, res: Response) => {
     const { id: productId } = req.params;
     const userId = req.userId;
     const { quantity } = req.body;
+    const isAdmin = req.isAdmin || false;
 
     if (!userId || !productId || !quantity || quantity <= 0) {
       return res.status(400).json({ error: "Invalid request" });
     }
 
     await prisma.cartItem.updateMany({
-      where: { userId, productId: Number(productId) },
+      where: {
+        userId: isAdmin ? null : Number(userId),
+        adminId: isAdmin ? Number(userId) : null,
+        productId: Number(productId),
+      },
       data: { quantity: Number(quantity) },
     });
 
@@ -51,22 +61,35 @@ export const addToCartHandler = async (req: Request, res: Response) => {
   try {
     const { id: productId } = req.params;
     const userId = req.userId;
+    const isAdmin = req.isAdmin || false;
 
     if (!userId || !productId) {
       return res.status(400).json({ error: "Invalid request" });
     }
 
-    const user = await prisma.user.findUnique({ where: { id: userId } });
-    const admin = await prisma.admin.findUnique({ where: { id: userId } });
+    const existingCartItem = await prisma.cartItem.findFirst({
+      where: {
+        userId: isAdmin ? null : Number(userId),
+        adminId: isAdmin ? Number(userId) : null,
+        productId: Number(productId),
+      },
+    });
 
-    const data = {
-      quantity: 1,
-      productId: Number(productId),
-      userId: user?.id,
-      adminId: admin?.id,
-    };
+    if (existingCartItem) {
+      await prisma.cartItem.update({
+        where: { id: existingCartItem.id },
+        data: { quantity: existingCartItem.quantity + 1 },
+      });
+    } else {
+      const data = {
+        quantity: 1,
+        productId: Number(productId),
+        userId: isAdmin ? null : Number(userId),
+        adminId: isAdmin ? Number(userId) : null,
+      };
 
-    await prisma.cartItem.create({ data });
+      await prisma.cartItem.create({ data });
+    }
 
     return res.status(200).json({ message: "Product added to the cart" });
   } catch (error) {
@@ -78,39 +101,45 @@ export const addToCartHandler = async (req: Request, res: Response) => {
 export const getCartProductsHandler = async (req: Request, res: Response) => {
   try {
     const userId = req.userId;
+    const isAdmin = req.isAdmin || false;
 
     if (!userId) {
       return res.status(400).json({ error: "Invalid request" });
     }
 
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      include: { cartItems: true },
-    });
+    let cartProducts;
 
-    const admin = await prisma.admin.findUnique({
-      where: { id: userId },
-      include: { cartItems: true },
-    });
-
-    const cartProducts = user?.cartItems || admin?.cartItems || [];
+    if (!isAdmin) {
+      const user = await prisma.user.findUnique({
+        where: { id: Number(userId) },
+        include: { cartItems: true },
+      });
+      cartProducts = user?.cartItems || [];
+    } else {
+      const admin = await prisma.admin.findUnique({
+        where: { id: Number(userId) },
+        include: { cartItems: true },
+      });
+      cartProducts = admin?.cartItems || [];
+    }
 
     return res.status(200).json(cartProducts);
   } catch (error) {
     console.error("Error fetching cart products:", error);
-    return res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: `Internal server error` });
   }
 };
 
 export const cart = async (req: Request, res: Response) => {
   try {
     const userId: number | undefined = req.userId;
+    const isAdmin = req.isAdmin || false;
 
     if (!userId) {
       return res.status(400).json({ error: "Invalid request" });
     }
 
-    const products = await fetchProductsForSpecific(userId);
+    const products = await fetchProductsForSpecific(userId, isAdmin);
 
     return res.json(products);
   } catch (error) {
@@ -119,39 +148,50 @@ export const cart = async (req: Request, res: Response) => {
   }
 };
 
-const fetchProductsForSpecific = async (userId: number) => {
+const fetchProductsForSpecific = async (userId: number, isAdmin: boolean) => {
   try {
-    const userWithProducts = await prisma.user.findUnique({
-      where: { id: userId },
-      include: {
-        cartItems: {
-          include: {
-            product: true,
+    if (isAdmin) {
+      const adminWithProducts = await prisma.admin.findUnique({
+        where: { id: userId },
+        include: {
+          cartItems: {
+            include: {
+              product: true,
+            },
           },
         },
-      },
-    });
+      });
 
-    const adminWithProducts = await prisma.admin.findUnique({
-      where: { id: userId },
-      include: {
-        cartItems: {
-          include: {
-            product: true,
-          },
-        },
-      },
-    });
-
-    if (userWithProducts || adminWithProducts) {
-      const cartItems =
-        (userWithProducts || adminWithProducts)?.cartItems || [];
-      const products = cartItems.map((cartItem) => cartItem.product);
-      console.log(products);
-      return products;
+      if (adminWithProducts) {
+        const cartItems = adminWithProducts.cartItems || [];
+        const products = cartItems.map((cartItem) => cartItem.product);
+        console.log(products);
+        return products;
+      } else {
+        console.log("Admin not found");
+        return [];
+      }
     } else {
-      console.log("User or admin not found");
-      return [];
+      const userWithProducts = await prisma.user.findUnique({
+        where: { id: userId },
+        include: {
+          cartItems: {
+            include: {
+              product: true,
+            },
+          },
+        },
+      });
+
+      if (userWithProducts) {
+        const cartItems = userWithProducts.cartItems || [];
+        const products = cartItems.map((cartItem) => cartItem.product);
+        console.log(products);
+        return products;
+      } else {
+        console.log("User not found");
+        return [];
+      }
     }
   } catch (error) {
     console.error("Error fetching products for user or admin:", error);
