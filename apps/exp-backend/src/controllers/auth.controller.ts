@@ -2,12 +2,11 @@ import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import bcrypt from "bcrypt";
-import { PrismaClient } from "../../../../prisma/generated/client";
+import prisma from "../lib/prisma";
 
 dotenv.config();
 
 const JWT_SECRET = process.env.JWT_SECRET;
-const prisma = new PrismaClient();
 
 const generateToken = (id: number) => {
   if (!JWT_SECRET) {

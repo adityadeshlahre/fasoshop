@@ -1,9 +1,7 @@
 //need fix
 
 import { Request, Response } from "express";
-import { PrismaClient } from "../../../../prisma/generated/client";
-
-const prisma = new PrismaClient();
+import prisma from "../lib/prisma";
 
 export const deleteCartProductHandler = async (req: Request, res: Response) => {
   try {

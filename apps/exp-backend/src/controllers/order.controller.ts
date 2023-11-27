@@ -4,9 +4,7 @@
 //orderIs not being used as queue
 
 import { Request, Response } from "express";
-import { PrismaClient } from "../../../../prisma/generated/client";
-
-const prisma = new PrismaClient();
+import prisma from "../lib/prisma";
 
 const fetchProductsForSpecific = async (userId: number, isAdmin: boolean) => {
   try {

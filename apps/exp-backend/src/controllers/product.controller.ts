@@ -1,8 +1,6 @@
 import { Request, Response } from "express";
-import { PrismaClient } from "../../../../prisma/generated/client";
+import prisma from "../lib/prisma";
 import { fetchImages } from "../utils/image.fetch";
-
-const prisma = new PrismaClient();
 
 export const getProducts = async (req: Request, res: Response) => {
   try {
