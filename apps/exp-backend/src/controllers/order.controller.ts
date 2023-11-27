@@ -1,7 +1,6 @@
 //need fix
 //null values fix
 //product values fetching using productId
-//CartItems aren't getting empty
 //orderIs not being used as queue
 
 import { Request, Response } from "express";
@@ -64,11 +63,9 @@ export const order = async (req: Request, res: Response) => {
 
     const orderStatus = status === "1" ? "completed" : "pending";
 
-    // If status is "1", move items to order history
     if (status === "1" && products.length > 0) {
       const total = products.reduce((acc, product) => acc + product.price, 0);
 
-      // Create a new order
       let order;
       if (isAdmin) {
         order = await prisma.order.create({
@@ -92,7 +89,6 @@ export const order = async (req: Request, res: Response) => {
         });
       }
 
-      // Create order history
       await prisma.orderHistory.create({
         data: {
           userId: order.userId,
@@ -103,10 +99,8 @@ export const order = async (req: Request, res: Response) => {
         },
       });
 
-      // Clear the user's cart
-      await prisma.cartItem.updateMany({
+      await prisma.cartItem.deleteMany({
         where: { userId },
-        data: { quantity: 0 },
       });
 
       res.json({ message: "Order placed successfully" });
