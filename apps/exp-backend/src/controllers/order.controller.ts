@@ -56,12 +56,14 @@ export const order = async (req: Request, res: Response) => {
     }
 
     const products = await fetchProductsForSpecific(userId, isAdmin);
-
-    const { productId, status } = req.body;
-
+    if (products.length === 0) {
+      return res.json({ message: "Cart is empty" });
+    }
+    const product = products[0];
+    const { status } = req.body;
     const orderStatus = status === "1" ? "completed" : "pending";
 
-    if (status === "1" && products.length > 0) {
+    if (status && products.length > 0) {
       const total = products.reduce((acc, product) => acc + product.price, 0);
 
       let order;
@@ -70,9 +72,9 @@ export const order = async (req: Request, res: Response) => {
           data: {
             userId: null,
             adminId: userId,
-            productId,
+            productId: product.id,
             status: orderStatus,
-            total,
+            total: total,
           },
         });
       } else {
@@ -80,9 +82,9 @@ export const order = async (req: Request, res: Response) => {
           data: {
             userId,
             adminId: null,
-            productId,
+            productId: product.id,
             status: orderStatus,
-            total,
+            total: total,
           },
         });
       }
@@ -91,15 +93,17 @@ export const order = async (req: Request, res: Response) => {
         data: {
           userId: order.userId,
           adminId: order.adminId,
-          productId,
-          status: "completed",
+          productId: order.productId,
+          status: orderStatus,
           total: order.total,
         },
       });
 
-      await prisma.cartItem.deleteMany({
-        where: { userId },
-      });
+      if (status === "completed") {
+        await prisma.cartItem.deleteMany({
+          where: { userId: isAdmin ? null : userId },
+        });
+      }
 
       res.json({ message: "Order placed successfully" });
     } else {

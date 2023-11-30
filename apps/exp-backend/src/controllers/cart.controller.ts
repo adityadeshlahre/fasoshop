@@ -163,7 +163,6 @@ const fetchProductsForSpecific = async (userId: number, isAdmin: boolean) => {
       if (adminWithProducts) {
         const cartItems = adminWithProducts.cartItems || [];
         const products = cartItems.map((cartItem) => cartItem.product);
-        console.log(products);
         return products;
       } else {
         console.log("Admin not found");
@@ -184,7 +183,6 @@ const fetchProductsForSpecific = async (userId: number, isAdmin: boolean) => {
       if (userWithProducts) {
         const cartItems = userWithProducts.cartItems || [];
         const products = cartItems.map((cartItem) => cartItem.product);
-        console.log(products);
         return products;
       } else {
         console.log("User not found");
