@@ -1,4 +1,4 @@
-interface User {
+export interface User {
   id: number;
   username: string;
   email: string;
@@ -6,7 +6,3 @@ interface User {
   token: string;
   // Add more user details here
 }
-
-const user: User[] = [];
-
-export { User, user };

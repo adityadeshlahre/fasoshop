@@ -24,7 +24,7 @@
 - [ ] Trpc
 - [ ] Next Auth
 - [ ] NextJs Router
-- [ ] ZOD
+- [ ] ZOD/Zod-Prisma
 - [ ] Payment System
 - [ ] Docker [Maybe]
 - [ ] Etc.....
