@@ -2,6 +2,7 @@
 
 import { Request, Response } from "express";
 import prisma from "../lib/prisma";
+import { fetchProductsForSpecific } from "../lib/fetchProduct";
 
 export const deleteCartProductHandler = async (req: Request, res: Response) => {
   try {
@@ -143,55 +144,6 @@ export const cart = async (req: Request, res: Response) => {
   } catch (error) {
     console.error("Error: ", error);
     return res.status(500).json({ error: "Internal server error" });
-  }
-};
-
-const fetchProductsForSpecific = async (userId: number, isAdmin: boolean) => {
-  try {
-    if (isAdmin) {
-      const adminWithProducts = await prisma.admin.findUnique({
-        where: { id: userId },
-        include: {
-          cartItems: {
-            include: {
-              product: true,
-            },
-          },
-        },
-      });
-
-      if (adminWithProducts) {
-        const cartItems = adminWithProducts.cartItems || [];
-        const products = cartItems.map((cartItem) => cartItem.product);
-        return products;
-      } else {
-        console.log("Admin not found");
-        return [];
-      }
-    } else {
-      const userWithProducts = await prisma.user.findUnique({
-        where: { id: userId },
-        include: {
-          cartItems: {
-            include: {
-              product: true,
-            },
-          },
-        },
-      });
-
-      if (userWithProducts) {
-        const cartItems = userWithProducts.cartItems || [];
-        const products = cartItems.map((cartItem) => cartItem.product);
-        return products;
-      } else {
-        console.log("User not found");
-        return [];
-      }
-    }
-  } catch (error) {
-    console.error("Error fetching products for user or admin:", error);
-    throw error;
   }
 };
 
