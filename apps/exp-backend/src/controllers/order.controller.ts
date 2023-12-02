@@ -154,6 +154,55 @@ export const order = async (req: Request, res: Response) => {
   }
 };
 
+export const orderStatusUpdate = async (req: Request, res: Response) => {
+  //needs fix [productId,orderId,userId] all the inputes and
+  // put/changes should only work when isAdmin is true
+  try {
+    const userId: number | undefined = req.userId;
+    const isAdmin: boolean = req.isAdmin || false;
+    const orderId: number | undefined = parseInt(req.params.orderId as string);
+
+    if (userId === undefined) {
+      return res
+        .status(400)
+        .json({ error: "Invalid request, userId is missing" });
+    }
+    const { productId, status } = req.body;
+    const orderStatus = status === "1" ? "completed" : "pending";
+
+    if (productId && status) {
+      // only admins should do the changes
+      const order = await prisma.order.update({
+        where: { id: orderId, productId: productId }, // Adjust this based on your data model
+        data: {
+          status: orderStatus,
+        },
+      });
+
+      await prisma.orderHistory.update({
+        where: { id: orderId },
+        data: {
+          status: orderStatus,
+        },
+      });
+
+      if (orderStatus === "completed") {
+        await prisma.cartItem.deleteMany({
+          where: { userId: isAdmin ? null : userId },
+        });
+      }
+      //when pending changes to complete then cartItem should get empty too
+
+      res.json({ message: "Order placed successfully" });
+    } else {
+      res.json({ message: "Order wans't successfully placed" });
+    }
+  } catch (error) {
+    console.error("Error processing order:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
 export const orderHistory = async (req: Request, res: Response) => {
   try {
     const userId: number | undefined = req.userId;
