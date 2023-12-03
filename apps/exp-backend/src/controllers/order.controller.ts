@@ -60,17 +60,16 @@ export const directOrder = async (req: Request, res: Response) => {
       });
     }
 
-    await prisma.orderHistory.create({
-      data: {
-        userId: order.userId,
-        adminId: order.adminId,
-        productId: order.productId,
-        status: orderStatus,
-        total: order.total,
-      },
-    });
-
     if (orderStatus === "completed") {
+      await prisma.orderHistory.create({
+        data: {
+          userId: order.userId,
+          adminId: order.adminId,
+          productId: order.productId,
+          status: orderStatus,
+          total: order.total,
+        },
+      });
       await prisma.cartItem.deleteMany({
         where: { userId: isAdmin ? null : userId },
       });
@@ -128,17 +127,16 @@ export const order = async (req: Request, res: Response) => {
         });
       }
 
-      await prisma.orderHistory.create({
-        data: {
-          userId: order.userId,
-          adminId: order.adminId,
-          productId: order.productId,
-          status: orderStatus,
-          total: order.total,
-        },
-      });
-
       if (orderStatus === "completed") {
+        await prisma.orderHistory.create({
+          data: {
+            userId: order.userId,
+            adminId: order.adminId,
+            productId: order.productId,
+            status: orderStatus,
+            total: order.total,
+          },
+        });
         await prisma.cartItem.deleteMany({
           where: { userId: isAdmin ? null : userId },
         });
@@ -155,32 +153,41 @@ export const order = async (req: Request, res: Response) => {
 };
 
 export const orderStatusUpdate = async (req: Request, res: Response) => {
-  //needs fix [productId,orderId,userId] all the inputes and
-  // put/changes should only work when isAdmin is true
   try {
     const userId: number | undefined = req.userId;
     const isAdmin: boolean = req.isAdmin || false;
-    const orderId: number | undefined = parseInt(req.params.orderId as string);
-
     if (userId === undefined) {
       return res
         .status(400)
         .json({ error: "Invalid request, userId is missing" });
     }
-    const { productId, status } = req.body;
+    if (!isAdmin) {
+      return res
+        .status(403)
+        .json({ error: "Only admins are allowed to update order status" });
+    }
+    const orderId = await prisma.order.findFirst({
+      where: {
+        OR: [
+          { userId: userId, status: "pending" },
+          { adminId: userId, status: "pending" },
+        ],
+      },
+    });
+    console.log(orderId);
+    const { status } = req.body;
     const orderStatus = status === "1" ? "completed" : "pending";
 
-    if (productId && status) {
-      // only admins should do the changes
-      const order = await prisma.order.update({
-        where: { id: orderId, productId: productId }, // Adjust this based on your data model
+    if (status && orderId) {
+      await prisma.order.update({
+        where: { id: orderId?.id, productId: orderId?.productId },
         data: {
           status: orderStatus,
         },
       });
 
       await prisma.orderHistory.update({
-        where: { id: orderId },
+        where: { id: orderId?.id },
         data: {
           status: orderStatus,
         },
@@ -188,10 +195,9 @@ export const orderStatusUpdate = async (req: Request, res: Response) => {
 
       if (orderStatus === "completed") {
         await prisma.cartItem.deleteMany({
-          where: { userId: isAdmin ? null : userId },
+          where: { OR: [{ userId: userId }, { adminId: userId }] },
         });
       }
-      //when pending changes to complete then cartItem should get empty too
 
       res.json({ message: "Order placed successfully" });
     } else {
@@ -218,6 +224,32 @@ export const orderHistory = async (req: Request, res: Response) => {
       where: {
         userId: isAdmin ? null : userId,
         adminId: isAdmin ? userId : null,
+      },
+    });
+
+    res.json(orderHistory);
+  } catch (error) {
+    console.error("Error retrieving order history:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const orderWithPendingStatus = async (req: Request, res: Response) => {
+  try {
+    const userId: number | undefined = req.userId;
+    const isAdmin: boolean = req.isAdmin || false;
+
+    if (userId === undefined) {
+      return res
+        .status(400)
+        .json({ error: "Invalid request, userId is missing" });
+    }
+
+    const orderHistory = await prisma.order.findMany({
+      where: {
+        userId: isAdmin ? null : userId,
+        adminId: isAdmin ? userId : null,
+        status: "pending",
       },
     });
 
