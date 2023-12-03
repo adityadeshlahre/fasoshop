@@ -2,6 +2,7 @@
 //null values fix
 //product values fetching using productId
 //orderIs not being used as queue
+//cartItems checkingup its clearning or not
 
 import { Request, Response } from "express";
 import prisma from "../lib/prisma";
@@ -166,6 +167,7 @@ export const orderStatusUpdate = async (req: Request, res: Response) => {
         .status(403)
         .json({ error: "Only admins are allowed to update order status" });
     }
+    //specific Product updation need to achive
     const orderId = await prisma.order.findFirst({
       where: {
         OR: [
@@ -174,7 +176,6 @@ export const orderStatusUpdate = async (req: Request, res: Response) => {
         ],
       },
     });
-    console.log(orderId);
     const { status } = req.body;
     const orderStatus = status === "1" ? "completed" : "pending";
 
@@ -202,6 +203,54 @@ export const orderStatusUpdate = async (req: Request, res: Response) => {
       res.json({ message: "Order placed successfully" });
     } else {
       res.json({ message: "Order wans't successfully placed" });
+    }
+  } catch (error) {
+    console.error("Error processing order:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const orderDeletion = async (req: Request, res: Response) => {
+  try {
+    const userId: number | undefined = req.userId;
+    const isAdmin: boolean = req.isAdmin || false;
+    if (userId === undefined) {
+      return res
+        .status(400)
+        .json({ error: "Invalid request, userId is missing" });
+    }
+    if (!isAdmin) {
+      return res
+        .status(403)
+        .json({ error: "Only admins are allowed to update order status" });
+    }
+    //specific Product Deletion need to achive
+    const orderId = await prisma.order.findFirst({
+      where: {
+        OR: [
+          { userId: userId, status: "pending" },
+          { adminId: userId, status: "pending" },
+        ],
+      },
+    });
+    console.log(orderId);
+
+    if (orderId) {
+      await prisma.order.deleteMany({
+        where: { id: orderId?.id },
+      });
+
+      await prisma.orderHistory.deleteMany({
+        where: { id: orderId?.id },
+      });
+
+      await prisma.cartItem.deleteMany({
+        where: { OR: [{ userId: userId }, { adminId: userId }] },
+      });
+
+      res.json({ message: "Order deleted successfully" });
+    } else {
+      res.json({ message: "Order wans't successfully deleted" });
     }
   } catch (error) {
     console.error("Error processing order:", error);
