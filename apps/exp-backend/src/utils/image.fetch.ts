@@ -30,7 +30,7 @@ export const fetchImages = async (req: any, res: any) => {
     if ("media" in photos) {
       const srcUrls = photos.media
         .filter((media: any) => media.type === "Photo")
-        .map((media: any) => media.src.small);
+        .map((media: any) => media.src.original);
 
       console.log(srcUrls);
       res.json(srcUrls);

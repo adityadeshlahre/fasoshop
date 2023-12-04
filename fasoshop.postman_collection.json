@@ -794,9 +794,65 @@
 					"response": []
 				},
 				{
+					"name": "orderWithPendingStatus",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzAxNDA5MjEwfQ.BNhCMZ23lTcAAX57OfsR1_0rDVq9KiePraogYO6d1bQ",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{BURL}}order/pending",
+							"host": [
+								"{{BURL}}order"
+							],
+							"path": [
+								"pending"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "directOrderPlacing",
 					"request": {
 						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzAxNDA5MjEwfQ.BNhCMZ23lTcAAX57OfsR1_0rDVq9KiePraogYO6d1bQ",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"status\":\"0\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BURL}}order/d/1",
+							"host": [
+								"{{BURL}}order"
+							],
+							"path": [
+								"d",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "orderUpdateByAdminOnly",
+					"request": {
+						"method": "PUT",
 						"header": [
 							{
 								"key": "token",
@@ -814,13 +870,35 @@
 							}
 						},
 						"url": {
-							"raw": "{{BURL}}order/d/2",
+							"raw": "{{BURL}}order/edit",
 							"host": [
 								"{{BURL}}order"
 							],
 							"path": [
-								"d",
-								"2"
+								"edit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "orderDeleteByAdminOnly",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzAxNDA5MjEwfQ.BNhCMZ23lTcAAX57OfsR1_0rDVq9KiePraogYO6d1bQ",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{BURL}}order/delete",
+							"host": [
+								"{{BURL}}order"
+							],
+							"path": [
+								"delete"
 							]
 						}
 					},
