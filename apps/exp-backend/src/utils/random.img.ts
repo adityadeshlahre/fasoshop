@@ -1,56 +1,60 @@
-import express from "express";
-import * as http from "http";
+//need fix
+//random URL fix
+//fetchImages function fix needed
 
-const imageUrls: string[] = [
-  "https://images.pexels.com/photos/61120/pexels-photo-61120.jpeg",
-  "https://images.pexels.com/photos/398078/pexels-photo-398078.jpeg",
-  "https://images.pexels.com/photos/993874/pexels-photo-993874.jpeg",
-  "https://images.pexels.com/photos/1082526/pexels-photo-1082526.jpeg",
-  "https://images.pexels.com/photos/1346187/pexels-photo-1346187.jpeg",
-  "https://images.pexels.com/photos/1957154/pexels-photo-1957154.jpeg",
-  "https://images.pexels.com/photos/2068349/pexels-photo-2068349.jpeg",
-  "https://images.pexels.com/photos/2343661/pexels-photo-2343661.jpeg",
-  "https://images.pexels.com/photos/3066531/pexels-photo-3066531.jpeg",
-];
+import express from "express";
+import { createClient } from "pexels";
+import dotenv from "dotenv";
+dotenv.config();
+const api = process.env.PEXELS || "";
+const client = createClient(api);
 
 export const imageCall = async (
+  // this function should return random url from the fetch images url
   req: express.Request,
   res: express.Response
 ) => {
   try {
+    const imageUrls: string[] = await fetchImagesP(req, res);
+
+    if (!imageUrls || imageUrls.length === 0) {
+      return res.status(500).json({ error: "Failed to fetch image URLs" });
+    }
+
     const randomUrl = imageUrls[Math.floor(Math.random() * imageUrls.length)];
-    const { host, pathname } = new URL(randomUrl);
 
-    const options: http.RequestOptions = {
-      method: "GET",
-      hostname: host,
-      path: pathname,
-    };
-
-    const reqPexels = http.request(options, (response) => {
-      const chunks: Uint8Array[] = [];
-
-      response.on("data", (chunk) => {
-        chunks.push(chunk);
-      });
-
-      response.on("end", () => {
-        const data = Buffer.concat(chunks);
-        console.log(
-          `Request to ${randomUrl} successful. Response data length: ${data.length}`
-        );
-        res.status(200).json({ imageUrl: randomUrl });
-      });
-    });
-
-    reqPexels.on("error", (error) => {
-      console.error(`Error making request to ${randomUrl}:`, error.message);
-      res.status(500).json({ error: "Failed to make request" });
-    });
-
-    reqPexels.end();
+    res.status(200).json({ imageUrl: randomUrl });
   } catch (error) {
     console.error("Error making request:", error);
     res.status(500).json({ error: "Failed to make request" });
+  }
+};
+
+const fetchImagesP = async (req: any, res: any) => {
+  try {
+    // const id = req.body.id;
+    const query = req.body.query;
+
+    if (!query) {
+      return res
+        .status(400)
+        .json({ error: "Provide either 'id' or 'query', not both." });
+    }
+
+    const photos = await client.collections.media({
+      id: query,
+      per_page: 15,
+      type: "photos",
+    });
+
+    if ("media" in photos) {
+      const srcUrls = photos.media
+        .filter((media: any) => media.type === "Photo")
+        .map((media: any) => media.src.original);
+      return srcUrls;
+    }
+  } catch (error) {
+    console.error("Error fetching photos:", error);
+    res.status(500).json({ error: "Failed to fetch images" });
   }
 };

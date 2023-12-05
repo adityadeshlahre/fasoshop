@@ -10,7 +10,7 @@ import { imageCall } from "../utils/random.img";
 
 const router = express.Router();
 
-router.get("/img/:id", fetchImages);
+router.get("/", fetchImages);
 router.get("/collection", fetchCollections);
 router.get("/collection/:idOrTitle", fetchCollectionInfo);
 router.get("/user", authenticateUser, cartProductImg);
