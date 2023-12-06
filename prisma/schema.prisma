@@ -47,6 +47,7 @@ model Product {
   description String
   price       Float
   imageUrl    String
+  categoryId           String
   // Add more product fields here (e.g., category, brand, etc.)
 
   // Define the relationship with users
@@ -55,6 +56,7 @@ model Product {
   // Add a relation to Admin
   adminId      Int
   admin        Admin          @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  category     Category       @relation(fields: [categoryId], references: [id])
   cartItems    CartItem[]
   orderHistory OrderHistory[]
   order        Order[]
@@ -117,4 +119,12 @@ model OrderHistory {
   // Relationship with Order
   orderId Int?
   order   Order? @relation(fields: [orderId], references: [id])
+}
+
+model Category {
+  id        String    @id @default(uuid())
+  name      String    @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime
+  products  Product[]
 }

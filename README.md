@@ -15,7 +15,7 @@
 
 ## Images API
 
-- PELEX api
+- PEXELS api
 
 ---
 
@@ -27,4 +27,5 @@
 - [ ] ZOD/Zod-Prisma
 - [ ] Payment System
 - [ ] Docker [Maybe]
+- [ ] models.ts to packages
 - [ ] Etc.....

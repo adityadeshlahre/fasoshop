@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import prisma from "../lib/prisma";
-import { fetchImages } from "../utils/image.fetch";
+import { imageCall } from "../utils/random.img";
+import { fetchCollectionInfo } from "../utils/collectionId.fetch";
 
 export const getProducts = async (req: Request, res: Response) => {
   try {
@@ -12,22 +13,29 @@ export const getProducts = async (req: Request, res: Response) => {
   }
 };
 
-export const uploadImage = (req: Request, res: Response) => {};
+export const uploadImage = async (req: Request, res: Response) => {
+  const { imageUrl } = req.body;
+  const url = await imageCall(req, imageUrl);
+  console.log(url);
+  return url;
+};
 
 export const addProduct = async (req: Request, res: Response) => {
   try {
-    const { name, description, price, imageUrl } = req.body;
+    const { name, description, price, imageUrl, category } = req.body;
     const userId: number | undefined = req.userId;
     const isAdmin = req.isAdmin;
     if (!isAdmin) {
       return res.status(403).json({ error: "Access denied. Not an admin." });
     }
+    const selectedImageUrl = imageUrl || (await uploadImage(req, res));
     const newProduct = await prisma.product.create({
       data: {
         name,
         description,
         price,
-        imageUrl,
+        imageUrl: selectedImageUrl,
+        category,
         // user: { connect: { id: userId } },
         admin: { connect: { id: userId } },
       },
@@ -43,19 +51,21 @@ export const addProduct = async (req: Request, res: Response) => {
 export const updateProduct = async (req: Request, res: Response) => {
   try {
     const productId: number = Number(req.params.id);
-    const { name, description, price, imageUrl } = req.body;
+    const { name, description, price, imageUrl, category } = req.body;
     const userId: number | undefined = req.userId;
     const isAdmin = req.isAdmin;
     if (!isAdmin) {
       return res.status(403).json({ error: "Access denied. Not an admin." });
     }
+    const selectedImageUrl = imageUrl || (await uploadImage(req, res));
     const updatedProduct = await prisma.product.update({
       where: { id: productId },
       data: {
         name,
         description,
         price,
-        imageUrl,
+        imageUrl: selectedImageUrl,
+        category,
         admin: { connect: { id: userId } },
       },
     });

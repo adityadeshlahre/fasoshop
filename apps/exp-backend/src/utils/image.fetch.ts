@@ -29,7 +29,7 @@ export const fetchImages = async (req: any, res: any) => {
         .filter((media: any) => media.type === "Photo")
         .map((media: any) => media.src.original);
       res.json(srcUrls);
-      return;
+      return srcUrls;
     } else {
       res.json([]);
     }

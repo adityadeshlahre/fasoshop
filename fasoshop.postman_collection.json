@@ -431,9 +431,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BURL}}product/collection",
+							"raw": "{{BURL}}img/collection",
 							"host": [
-								"{{BURL}}product"
+								"{{BURL}}img"
 							],
 							"path": [
 								"collection"
@@ -448,43 +448,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BURL}}product/collection/jackets",
+							"raw": "{{BURL}}img/collection/jackets",
 							"host": [
-								"{{BURL}}product"
+								"{{BURL}}img"
 							],
 							"path": [
 								"collection",
 								"jackets"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "pelexGetImgLocalHost",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{BURL}}product/img/iaqdfla",
-							"host": [
-								"{{BURL}}product"
-							],
-							"path": [
-								"img",
-								"iaqdfla"
 							]
 						}
 					},
@@ -582,17 +552,76 @@
 						"header": [
 							{
 								"key": "token",
-								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNzAwMjkyMzE3fQ.bzHIYPAm6taOFdxY-GFJV8tUg-5-aoS-q_KuJw_prQY",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzAxNzEyMzU2fQ.pIoygDdhov590h9Y3-mf37Vgf9C7JwlEih75cXWTxh4",
 								"type": "text"
 							}
 						],
 						"url": {
-							"raw": "{{BURL}}product/user",
+							"raw": "{{BURL}}img/user",
 							"host": [
-								"{{BURL}}product"
+								"{{BURL}}img"
 							],
 							"path": [
 								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "pelexGetImgLocalHost",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"query\":\"xywsbzf\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BURL}}img/",
+							"host": [
+								"{{BURL}}img"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "directImg",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"query\":\"xywsbzf\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BURL}}img/set/",
+							"host": [
+								"{{BURL}}img"
+							],
+							"path": [
+								"set",
+								""
 							]
 						}
 					},

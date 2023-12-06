@@ -23,7 +23,7 @@ export const imageCall = async (
 
     const randomUrl = imageUrls[Math.floor(Math.random() * imageUrls.length)];
 
-    res.status(200).json({ imageUrl: randomUrl });
+    res.status(200).json(randomUrl);
   } catch (error) {
     console.error("Error making request:", error);
     res.status(500).json({ error: "Failed to make request" });
@@ -36,9 +36,7 @@ const fetchImagesP = async (req: any, res: any) => {
     const query = req.body.query;
 
     if (!query) {
-      return res
-        .status(400)
-        .json({ error: "Provide either 'id' or 'query', not both." });
+      return res.status(400).json({ error: "Provide 'query'." });
     }
 
     const photos = await client.collections.media({
@@ -52,6 +50,8 @@ const fetchImagesP = async (req: any, res: any) => {
         .filter((media: any) => media.type === "Photo")
         .map((media: any) => media.src.original);
       return srcUrls;
+    } else {
+      return [];
     }
   } catch (error) {
     console.error("Error fetching photos:", error);

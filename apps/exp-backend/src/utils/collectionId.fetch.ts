@@ -1,7 +1,6 @@
 //NEED FIX
 import { createClient } from "pexels";
 import dotenv from "dotenv";
-import express from "express";
 dotenv.config();
 
 const api = process.env.PEXELS || "";
