@@ -1,7 +1,5 @@
 import { Request, Response } from "express";
 import prisma from "../lib/prisma";
-import { imageCall } from "../utils/random.img";
-import { fetchCollectionInfo } from "../utils/collectionId.fetch";
 
 export const getProducts = async (req: Request, res: Response) => {
   try {
@@ -13,13 +11,6 @@ export const getProducts = async (req: Request, res: Response) => {
   }
 };
 
-export const uploadImage = async (req: Request, res: Response) => {
-  // const { imageUrl } = req.body;
-  const url = await imageCall(req, res);
-  console.log(url);
-  return url;
-};
-
 export const addProduct = async (req: Request, res: Response) => {
   try {
     const { name, description, price, imageUrl, category } = req.body;
@@ -28,17 +19,13 @@ export const addProduct = async (req: Request, res: Response) => {
     if (!isAdmin) {
       return res.status(403).json({ error: "Access denied. Not an admin." });
     }
-    let selectedImageUrl = imageUrl;
-    if (imageUrl === "") {
-      selectedImageUrl = await uploadImage(req, res);
-    }
 
     const newProduct = await prisma.product.create({
       data: {
         name,
         description,
         price,
-        imageUrl: selectedImageUrl,
+        imageUrl,
         category,
         // user: { connect: { id: userId } },
         admin: { connect: { id: userId } },
@@ -61,14 +48,13 @@ export const updateProduct = async (req: Request, res: Response) => {
     if (!isAdmin) {
       return res.status(403).json({ error: "Access denied. Not an admin." });
     }
-    const selectedImageUrl = imageUrl || (await uploadImage(req, res));
     const updatedProduct = await prisma.product.update({
       where: { id: productId },
       data: {
         name,
         description,
         price,
-        imageUrl: selectedImageUrl,
+        imageUrl,
         category,
         admin: { connect: { id: userId } },
       },

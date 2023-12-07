@@ -328,13 +328,13 @@
 						"header": [
 							{
 								"key": "token",
-								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzAxMzQyMzk5fQ.6JbybTSUE7sxN5fCgtWlX7UT-Rln3sSwpzk-WCVTGgs",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzAxOTY5MTI0fQ.vzveZei4kZtYh1jCGSNyBdl4ZktNx6Ag8z9cbBOowvg",
 								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"name\": \"ygu\",\n  \"description\": \"This is hbjhhb.\",\n  \"price\": 33.99,\n  \"imageUrl\": \"http://assets.myntassets.com/v1/images/style/properties/7a5b82d1372a7a5c6de67ae7a314fd91_images.jpg\"\n}",
+							"raw": "{\n  \"name\": \"ygu\",\n  \"description\": \"This is hbjhhb.\",\n  \"price\": 33.99,\n  \"imageUrl\":\"\",\n  \"category\":\"shoes\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -367,7 +367,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"name\": \"productpwerioh1-up\",\n  \"description\": \"This is a product1 description for the product.-up\",\n  \"price\": 2292.99,\n  \"imageUrl\": \"http://assets.myntassets.com/v1/images/style/properties/7a5b82d1372a7a5c6de67ae7a314fd91_images.jpg\"\n}",
+							"raw": "{\n  \"name\": \"productpwerioh1-up\",\n  \"description\": \"This is a product1 description for the product.-up\",\n  \"price\": 2292.99,\n  \"imageUrl\": \"http://assets.myntassets.com/v1/images/style/properties/7a5b82d1372a7a5c6de67ae7a314fd91_images.jpg\",\n  \"category\":\"shoes\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -415,213 +415,6 @@
 							"path": [
 								"products",
 								"22"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "pelexTest",
-			"item": [
-				{
-					"name": "productCol",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{BURL}}img/collection",
-							"host": [
-								"{{BURL}}img"
-							],
-							"path": [
-								"collection"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "productColl",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{BURL}}img/collection/jackets",
-							"host": [
-								"{{BURL}}img"
-							],
-							"path": [
-								"collection",
-								"jackets"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "pelexGetImgAllMyColl",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "OYIUxoeox0IhzCPAtcD0BY5E9yDaK97fnzRUdbrI43W1HnQWDwkQkaWE",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "https://api.pexels.com/v1/collections?per_page=20",
-							"protocol": "https",
-							"host": [
-								"api",
-								"pexels",
-								"com"
-							],
-							"path": [
-								"v1",
-								"collections"
-							],
-							"query": [
-								{
-									"key": "per_page",
-									"value": "20"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "pelexGetImgWithId",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "OYIUxoeox0IhzCPAtcD0BY5E9yDaK97fnzRUdbrI43W1HnQWDwkQkaWE",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "https://api.pexels.com/v1/collections/xywsbzf",
-							"protocol": "https",
-							"host": [
-								"api",
-								"pexels",
-								"com"
-							],
-							"path": [
-								"v1",
-								"collections",
-								"xywsbzf"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "userSpecificImages",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "token",
-								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzAxNzEyMzU2fQ.pIoygDdhov590h9Y3-mf37Vgf9C7JwlEih75cXWTxh4",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{BURL}}img/user",
-							"host": [
-								"{{BURL}}img"
-							],
-							"path": [
-								"user"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "pelexGetImgLocalHost",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"query\":\"xywsbzf\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{BURL}}img/",
-							"host": [
-								"{{BURL}}img"
-							],
-							"path": [
-								""
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "directImg",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"query\":\"xywsbzf\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{BURL}}img/set/",
-							"host": [
-								"{{BURL}}img"
-							],
-							"path": [
-								"set",
-								""
 							]
 						}
 					},

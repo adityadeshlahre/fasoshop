@@ -13,10 +13,6 @@
 - NextJs
 - TurboRepo [MonoRepo Management]
 
-## Images API
-
-- PEXELS api
-
 ---
 
 ## Implementing Soon
