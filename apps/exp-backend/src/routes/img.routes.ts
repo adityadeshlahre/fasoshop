@@ -12,7 +12,7 @@ const router = express.Router();
 
 router.get("/", fetchImages);
 router.get("/collection", fetchCollections);
-router.get("/collection/:idOrTitle", fetchCollectionInfo);
+router.get("/coll/", fetchCollectionInfo);
 router.get("/user", authenticateUser, cartProductImg);
 router.get("/set", imageCall);
 

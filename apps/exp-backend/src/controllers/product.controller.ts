@@ -14,8 +14,8 @@ export const getProducts = async (req: Request, res: Response) => {
 };
 
 export const uploadImage = async (req: Request, res: Response) => {
-  const { imageUrl } = req.body;
-  const url = await imageCall(req, imageUrl);
+  // const { imageUrl } = req.body;
+  const url = await imageCall(req, res);
   console.log(url);
   return url;
 };
@@ -28,7 +28,11 @@ export const addProduct = async (req: Request, res: Response) => {
     if (!isAdmin) {
       return res.status(403).json({ error: "Access denied. Not an admin." });
     }
-    const selectedImageUrl = imageUrl || (await uploadImage(req, res));
+    let selectedImageUrl = imageUrl;
+    if (imageUrl === "") {
+      selectedImageUrl = await uploadImage(req, res);
+    }
+
     const newProduct = await prisma.product.create({
       data: {
         name,

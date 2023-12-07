@@ -5,6 +5,7 @@
 import express from "express";
 import { createClient } from "pexels";
 import dotenv from "dotenv";
+import { fetchCollectionInfo } from "./collectionId.fetch";
 dotenv.config();
 const api = process.env.PEXELS || "";
 const client = createClient(api);
@@ -24,6 +25,7 @@ export const imageCall = async (
     const randomUrl = imageUrls[Math.floor(Math.random() * imageUrls.length)];
 
     res.status(200).json(randomUrl);
+    return randomUrl;
   } catch (error) {
     console.error("Error making request:", error);
     res.status(500).json({ error: "Failed to make request" });
@@ -33,7 +35,8 @@ export const imageCall = async (
 const fetchImagesP = async (req: any, res: any) => {
   try {
     // const id = req.body.id;
-    const query = req.body.query;
+    // const query: string | undefined = await fetchCollectionInfo(req, res); //[this fucntion shold work]
+    const query = req.body.category;
 
     if (!query) {
       return res.status(400).json({ error: "Provide 'query'." });
@@ -49,8 +52,10 @@ const fetchImagesP = async (req: any, res: any) => {
       const srcUrls = photos.media
         .filter((media: any) => media.type === "Photo")
         .map((media: any) => media.src.original);
+      res.json(srcUrls);
       return srcUrls;
     } else {
+      res.json([]);
       return [];
     }
   } catch (error) {

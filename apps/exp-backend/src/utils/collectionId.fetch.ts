@@ -29,7 +29,7 @@ export const fetchCollections = async (req: any, res: any) => {
 };
 
 export const fetchCollectionInfo = async (req: any, res: any) => {
-  const { idOrTitle } = req.params;
+  const { category } = req.body;
 
   try {
     const result = await client.collections.all({ per_page: 15 });
@@ -37,11 +37,15 @@ export const fetchCollectionInfo = async (req: any, res: any) => {
     if ("collections" in result) {
       const collection = result.collections.find(
         (c: { id: any; title: any }) =>
-          c.id === idOrTitle || c.title === idOrTitle
+          c.id === category || c.title === category
       );
 
       if (collection) {
-        res.json({ id: collection.id, title: collection.title });
+        if (collection.id === category) {
+          return collection.title;
+        } else {
+          return collection.id;
+        }
       } else {
         res.status(404).json({ error: "Collection not found" });
       }
