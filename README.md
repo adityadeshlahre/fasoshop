@@ -17,12 +17,12 @@
 
 ## Implementing Soon
 
+- [ ] Zod Validation
 - [ ] Trpc
 - [ ] Next Auth
 - [ ] NextJs Router
-- [ ] ZOD/Zod-Prisma
+- [ ] Zod-Prisma
 - [ ] Payment System
 - [ ] Docker [Maybe]
 - [ ] models.ts to packages
 - [ ] Etc.....
-- [ ] All Fetched collection to dataBase

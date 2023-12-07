@@ -5,20 +5,16 @@ generator client {
   output   = "./generated/client"
 }
 
-// Define the database connection
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL") // Use your PostgreSQL connection URL
+  url      = env("DATABASE_URL")
 }
-
-// Define your data models
 
 model Admin {
   id           Int            @id @default(autoincrement())
   username     String
   email        String         @unique
-  password     String // In practice, you should hash the password
-  // Add more admin fields as needed
+  password     String
   token        String?
   products     Product[]
   cartItems    CartItem[]
@@ -32,10 +28,6 @@ model User {
   email    String  @unique
   password String
   token    String?
-  // Add more user fields here (e.g., name, profile picture, etc.)
-
-  // Define the relationship with products
-  // products Product[]
   cartItems    CartItem[]
   order        Order[]
   orderHistory OrderHistory[]
@@ -47,19 +39,14 @@ model Product {
   description String
   price       Float
   imageUrl    String
-  categoryId           String
-  // Add more product fields here (e.g., category, brand, etc.)
-
-  // Define the relationship with users
-  // userId      Int
-  // user        User    @relation(fields: [userId], references: [id])
-  // Add a relation to Admin
+  categoryId  CategoryName
   adminId      Int
   admin        Admin          @relation(fields: [adminId], references: [id], onDelete: Cascade)
-  category     Category       @relation(fields: [categoryId], references: [id])
+  category     Category       @relation(fields: [categoryId], references: [name])
   cartItems    CartItem[]
   orderHistory OrderHistory[]
   order        Order[]
+  @@index([categoryId], name: "CategoryIndex")
 }
 
 model CartItem {
@@ -79,20 +66,12 @@ model Order {
   updatedAt DateTime @updatedAt
   status    String
   total     Float
-  // Add more order fields as needed
-
-  // Relationship with User
   userId Int?
   user   User? @relation(fields: [userId], references: [id])
-
-  // Relationship with Admin
   adminId Int?
   admin   Admin? @relation(fields: [adminId], references: [id])
-
   productId Int?
   product   Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
-
-  // Relationship with OrderHistory
   orderHistory OrderHistory[]
 }
 
@@ -102,29 +81,31 @@ model OrderHistory {
   updatedAt DateTime @updatedAt
   status    String
   total     Float
-  // Add more order history fields as needed
-
-  // Relationship with User
   userId Int?
   user   User? @relation(fields: [userId], references: [id])
-
-  // Relationship with Admin
   adminId Int?
   admin   Admin? @relation(fields: [adminId], references: [id])
-
-  // Relationship with Product
   productId Int?
   product   Product? @relation(fields: [productId], references: [id])
-
-  // Relationship with Order
   orderId Int?
   order   Order? @relation(fields: [orderId], references: [id])
 }
 
 model Category {
   id        String    @id @default(uuid())
-  name      String    @unique
+  name      CategoryName    @unique
   createdAt DateTime  @default(now())
   updatedAt DateTime
   products  Product[]
+}
+
+enum CategoryName {
+  SHIRT
+  PANTS
+  JEANS
+  TROUSER
+  JACKETS
+  CAPS
+  GLASSES
+  SHOES
 }
