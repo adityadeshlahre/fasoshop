@@ -6,6 +6,7 @@ import productRoutes from "./routes/product.routes";
 import adminRoutes from "./routes/admin.routes";
 import cartRoutes from "./routes/cart.routes";
 import order from "./routes/order.routes";
+import category from "./routes/category.routes";
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.use("/admin", adminRoutes);
 app.use("/user", userRoutes);
 app.use("/product", productRoutes);
 app.use("/cart", cartRoutes);
+app.use("/category", category);
 app.use("/order", order); //order route fix needed
 
 app.listen(process.env.PORT, () => {

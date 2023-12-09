@@ -23,30 +23,29 @@ model Admin {
 }
 
 model User {
-  id       Int     @id @default(autoincrement())
-  username String
-  email    String  @unique
-  password String
-  token    String?
+  id           Int            @id @default(autoincrement())
+  username     String
+  email        String         @unique
+  password     String
+  token        String?
   cartItems    CartItem[]
   order        Order[]
   orderHistory OrderHistory[]
 }
 
 model Product {
-  id          Int    @id @default(autoincrement())
-  name        String
-  description String
-  price       Float
-  imageUrl    String
-  categoryId  CategoryName
+  id           Int            @id @default(autoincrement())
+  name         String
+  description  String
+  price        Float
+  imageUrl     String
+  categoryId   String 
   adminId      Int
   admin        Admin          @relation(fields: [adminId], references: [id], onDelete: Cascade)
-  category     Category       @relation(fields: [categoryId], references: [name])
+  category     Category       @relation(fields: [categoryId], references: [id])
   cartItems    CartItem[]
   orderHistory OrderHistory[]
   order        Order[]
-  @@index([categoryId], name: "CategoryIndex")
 }
 
 model CartItem {
@@ -61,17 +60,17 @@ model CartItem {
 }
 
 model Order {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  status    String
-  total     Float
-  userId Int?
-  user   User? @relation(fields: [userId], references: [id])
-  adminId Int?
-  admin   Admin? @relation(fields: [adminId], references: [id])
-  productId Int?
-  product   Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
+  id           Int            @id @default(autoincrement())
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  status       String
+  total        Float
+  userId       Int?
+  user         User?          @relation(fields: [userId], references: [id])
+  adminId      Int?
+  admin        Admin?         @relation(fields: [adminId], references: [id])
+  productId    Int?
+  product      Product?       @relation(fields: [productId], references: [id], onDelete: Cascade)
   orderHistory OrderHistory[]
 }
 
@@ -81,31 +80,20 @@ model OrderHistory {
   updatedAt DateTime @updatedAt
   status    String
   total     Float
-  userId Int?
-  user   User? @relation(fields: [userId], references: [id])
-  adminId Int?
-  admin   Admin? @relation(fields: [adminId], references: [id])
+  userId    Int?
+  user      User?    @relation(fields: [userId], references: [id])
+  adminId   Int?
+  admin     Admin?   @relation(fields: [adminId], references: [id])
   productId Int?
   product   Product? @relation(fields: [productId], references: [id])
-  orderId Int?
-  order   Order? @relation(fields: [orderId], references: [id])
+  orderId   Int?
+  order     Order?   @relation(fields: [orderId], references: [id])
 }
 
 model Category {
   id        String    @id @default(uuid())
-  name      CategoryName    @unique
+  name      String    @unique
   createdAt DateTime  @default(now())
   updatedAt DateTime
   products  Product[]
-}
-
-enum CategoryName {
-  SHIRT
-  PANTS
-  JEANS
-  TROUSER
-  JACKETS
-  CAPS
-  GLASSES
-  SHOES
 }

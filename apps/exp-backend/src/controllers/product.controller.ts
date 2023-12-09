@@ -14,20 +14,26 @@ export const getProducts = async (req: Request, res: Response) => {
 export const addProduct = async (req: Request, res: Response) => {
   try {
     const { name, description, price, imageUrl, category } = req.body;
+    const categoryId = category.toUpperCase();
     const userId: number | undefined = req.userId;
     const isAdmin = req.isAdmin;
     if (!isAdmin) {
       return res.status(403).json({ error: "Access denied. Not an admin." });
     }
-
+    const existingCategory = await prisma.category.findUnique({
+      where: { name: categoryId },
+    });
+    console.log(existingCategory);
+    if (!existingCategory) {
+      return res.status(400).json({ error: "Category does not exist" });
+    }
     const newProduct = await prisma.product.create({
       data: {
         name,
         description,
         price,
         imageUrl,
-        category,
-        // user: { connect: { id: userId } },
+        category: categoryId,
         admin: { connect: { id: userId } },
       },
     });
@@ -43,10 +49,17 @@ export const updateProduct = async (req: Request, res: Response) => {
   try {
     const productId: number = Number(req.params.id);
     const { name, description, price, imageUrl, category } = req.body;
+    const categoryId = category.toUpperCase();
     const userId: number | undefined = req.userId;
     const isAdmin = req.isAdmin;
     if (!isAdmin) {
       return res.status(403).json({ error: "Access denied. Not an admin." });
+    }
+    const existingCategory = await prisma.category.findUnique({
+      where: { id: categoryId },
+    });
+    if (!existingCategory) {
+      return res.status(400).json({ error: "Category does not exist" });
     }
     const updatedProduct = await prisma.product.update({
       where: { id: productId },
@@ -55,17 +68,18 @@ export const updateProduct = async (req: Request, res: Response) => {
         description,
         price,
         imageUrl,
-        category,
+        category: categoryId,
         admin: { connect: { id: userId } },
       },
     });
 
     res.json(updatedProduct);
   } catch (error) {
-    console.error("Error updating product price:", error);
+    console.error("Error updating product:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
 export const deleteProduct = async (req: Request, res: Response) => {
   try {
     const productId = Number(req.params.id);
