@@ -20,12 +20,15 @@ export const addProduct = async (req: Request, res: Response) => {
     if (!isAdmin) {
       return res.status(403).json({ error: "Access denied. Not an admin." });
     }
-    const existingCategory = await prisma.category.findUnique({
+    let existingCategory = await prisma.category.findUnique({
       where: { name: categoryId },
     });
-    console.log(existingCategory);
     if (!existingCategory) {
-      return res.status(400).json({ error: "Category does not exist" });
+      existingCategory = await prisma.category.create({
+        data: {
+          name: categoryId,
+        },
+      });
     }
     const newProduct = await prisma.product.create({
       data: {
@@ -33,7 +36,11 @@ export const addProduct = async (req: Request, res: Response) => {
         description,
         price,
         imageUrl,
-        category: categoryId,
+        category: {
+          connect: {
+            id: existingCategory.id,
+          },
+        },
         admin: { connect: { id: userId } },
       },
     });
@@ -49,17 +56,21 @@ export const updateProduct = async (req: Request, res: Response) => {
   try {
     const productId: number = Number(req.params.id);
     const { name, description, price, imageUrl, category } = req.body;
-    const categoryId = category.toUpperCase();
+    const categoryId: string = category.toUpperCase();
     const userId: number | undefined = req.userId;
     const isAdmin = req.isAdmin;
     if (!isAdmin) {
       return res.status(403).json({ error: "Access denied. Not an admin." });
     }
-    const existingCategory = await prisma.category.findUnique({
-      where: { id: categoryId },
+    let existingCategory = await prisma.category.findUnique({
+      where: { name: categoryId },
     });
     if (!existingCategory) {
-      return res.status(400).json({ error: "Category does not exist" });
+      existingCategory = await prisma.category.create({
+        data: {
+          name: categoryId,
+        },
+      });
     }
     const updatedProduct = await prisma.product.update({
       where: { id: productId },
@@ -68,7 +79,11 @@ export const updateProduct = async (req: Request, res: Response) => {
         description,
         price,
         imageUrl,
-        category: categoryId,
+        category: {
+          connect: {
+            id: existingCategory.id,
+          },
+        },
         admin: { connect: { id: userId } },
       },
     });

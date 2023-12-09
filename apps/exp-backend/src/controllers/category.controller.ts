@@ -1,3 +1,6 @@
+//need fix
+//all routes check/test neede
+
 import { Request, Response } from "express";
 import prisma from "../lib/prisma";
 
@@ -14,7 +17,7 @@ export const getCategoriesHandler = async (_req: Request, res: Response) => {
 };
 
 export const getCategoryHandler = async (req: Request, res: Response) => {
-  const categoryId = req.params.id;
+  const categoryId = Number(req.params.id);
 
   try {
     const category = await prisma.category.findUnique({
@@ -41,7 +44,7 @@ export const getProductsInCategoryHandler = async (
 
   try {
     const products = await prisma.product.findMany({
-      where: { categoryId },
+      where: { name: categoryId },
       include: { category: true },
     });
 
@@ -60,7 +63,7 @@ export const getProductsInCategorySortedHandler = async (
 
   try {
     const products = await prisma.product.findMany({
-      where: { categoryId },
+      where: { name: categoryId },
       include: { category: true },
     });
 
