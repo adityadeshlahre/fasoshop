@@ -334,7 +334,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"name\": \"ygu\",\n  \"description\": \"This is hbjhhb.\",\n  \"price\": 33.99,\n  \"imageUrl\":\"\",\n  \"category\":\"shoes\"\n}",
+							"raw": "{\n  \"name\": \"ygu\",\n  \"description\": \"This is hbjhhb.\",\n  \"price\": 33.99,\n  \"imageUrl\":\"\",\n  \"category\":\"shirt\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -361,7 +361,7 @@
 						"header": [
 							{
 								"key": "token",
-								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTAsImlhdCI6MTcwMDE2NjQ0Mn0.xwxG96IXV6hX78ibrpRwA4Gr4UiC0Cx5CQqAwOvoXIg",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzAxOTY5MTI0fQ.vzveZei4kZtYh1jCGSNyBdl4ZktNx6Ag8z9cbBOowvg",
 								"type": "text"
 							}
 						],
@@ -375,13 +375,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{BURL}}product/products/22",
+							"raw": "{{BURL}}product/products/1",
 							"host": [
 								"{{BURL}}product"
 							],
 							"path": [
 								"products",
-								"22"
+								"1"
 							]
 						}
 					},
@@ -721,6 +721,176 @@
 							],
 							"path": [
 								"delete"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "category",
+			"item": [
+				{
+					"name": "createCategory",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzAyMTk1NDE0fQ.7bkBJ4pP_FMh-91ac2i1MrAqMgXYujKPy-HUJqXoqhQ",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\":\"TROUSERS\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BURL}}category/",
+							"host": [
+								"{{BURL}}category"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateCategory",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzAyMTk1NDE0fQ.7bkBJ4pP_FMh-91ac2i1MrAqMgXYujKPy-HUJqXoqhQ",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\":\"shirts\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BURL}}category/shirt",
+							"host": [
+								"{{BURL}}category"
+							],
+							"path": [
+								"shirt"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteCategory",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzAyMTk1NDE0fQ.7bkBJ4pP_FMh-91ac2i1MrAqMgXYujKPy-HUJqXoqhQ",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BURL}}category/trousers",
+							"host": [
+								"{{BURL}}category"
+							],
+							"path": [
+								"trousers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllCategory",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BURL}}category/",
+							"host": [
+								"{{BURL}}category"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getSingleCategory",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BURL}}category/shoes",
+							"host": [
+								"{{BURL}}category"
+							],
+							"path": [
+								"shoes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllCategoryOfSpecificId",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BURL}}category/Shoes",
+							"host": [
+								"{{BURL}}category"
+							],
+							"path": [
+								"Shoes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllCategoryOfSpecificIdProducts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BURL}}category/Shoes/products",
+							"host": [
+								"{{BURL}}category"
+							],
+							"path": [
+								"Shoes",
+								"products"
 							]
 						}
 					},

@@ -1,16 +1,22 @@
 //need fix
 import express from "express";
 import {
-  getCategoriesHandler,
-  getCategoryHandler,
-  getProductsInCategoryHandler,
-  getProductsInCategorySortedHandler,
+  createCategory,
+  deleteCategory,
+  getCategories,
+  getCategoriesWithProducts,
+  getProductsInCategory,
+  getSingleCategory,
+  updateCategory,
 } from "../controllers/category.controller";
+import { authenticateUser } from "../middleware/auth.middleware";
 const router = express.Router();
 
-router.get("/", getCategoriesHandler);
-router.get("/:id", getCategoryHandler);
-router.get("/:id/products", getProductsInCategoryHandler);
-router.get("/:id/products/sort/:sortType", getProductsInCategorySortedHandler);
-
+router.post("/", authenticateUser, createCategory);
+router.delete("/:name", authenticateUser, deleteCategory);
+router.put("/:name", authenticateUser, updateCategory);
+router.get("/", getCategories);
+router.get("/:id", getCategoriesWithProducts);
+router.get("/:id/products", getProductsInCategory);
+router.get("/:id/single", getSingleCategory);
 export default router;
