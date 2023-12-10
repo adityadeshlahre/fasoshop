@@ -1,19 +1,18 @@
-//need fix
 import express from "express";
 import {
-  addToCartHandler,
-  getCartProductsHandler,
+  addToCart,
+  getCartProducts,
   cart,
-  updateQuantityHandler,
-  deleteCartProductHandler,
+  updateQuantity,
+  deleteCartProduct,
 } from "../controllers/cart.controller";
 import { authenticateUser } from "../middleware/auth.middleware";
 const router = express.Router();
 
-router.get("/list", authenticateUser, getCartProductsHandler);
-router.post("/add/:id", authenticateUser, addToCartHandler);
-router.put("/update/:id", authenticateUser, updateQuantityHandler);
-router.delete("/delete/:id", authenticateUser, deleteCartProductHandler);
+router.get("/list", authenticateUser, getCartProducts);
+router.post("/add/:id", authenticateUser, addToCart);
+router.put("/update/:id", authenticateUser, updateQuantity);
+router.delete("/delete/:id", authenticateUser, deleteCartProduct);
 router.get("/cart", authenticateUser, cart);
 
 export default router;

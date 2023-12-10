@@ -1,5 +1,3 @@
-//NEED FIX [this function will fetch all the required images of specific user]
-
 import { Request, Response } from "express";
 import { PrismaClient } from "../../../../prisma/generated/client";
 const prisma = new PrismaClient();

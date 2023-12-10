@@ -4,7 +4,7 @@ import { Request, Response } from "express";
 import prisma from "../lib/prisma";
 import { fetchProductsForSpecific } from "../lib/fetchProduct";
 
-export const deleteCartProductHandler = async (req: Request, res: Response) => {
+export const deleteCartProduct = async (req: Request, res: Response) => {
   try {
     const { id: productId } = req.params;
     const userId = req.userId;
@@ -29,7 +29,7 @@ export const deleteCartProductHandler = async (req: Request, res: Response) => {
   }
 };
 
-export const updateQuantityHandler = async (req: Request, res: Response) => {
+export const updateQuantity = async (req: Request, res: Response) => {
   try {
     const { id: productId } = req.params;
     const userId = req.userId;
@@ -56,7 +56,7 @@ export const updateQuantityHandler = async (req: Request, res: Response) => {
   }
 };
 
-export const addToCartHandler = async (req: Request, res: Response) => {
+export const addToCart = async (req: Request, res: Response) => {
   try {
     const { id: productId } = req.params;
     const userId = req.userId;
@@ -97,7 +97,7 @@ export const addToCartHandler = async (req: Request, res: Response) => {
   }
 };
 
-export const getCartProductsHandler = async (req: Request, res: Response) => {
+export const getCartProducts = async (req: Request, res: Response) => {
   try {
     const userId = req.userId;
     const isAdmin = req.isAdmin || false;

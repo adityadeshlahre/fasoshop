@@ -1,4 +1,3 @@
-//need fix
 import express from "express";
 import {
   createCategory,
