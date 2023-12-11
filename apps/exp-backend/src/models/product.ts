@@ -6,12 +6,14 @@ export interface Product {
   description: string;
   price: number;
   imageUrl: string;
+  category: string;
+  adminId: number;
 }
 
 export const productSchema = z.object({
-  id: z.number(),
   name: z.string(),
   description: z.string(),
   price: z.number(),
   imageUrl: z.string(),
+  category: z.string(),
 });

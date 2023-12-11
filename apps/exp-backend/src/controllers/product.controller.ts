@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import prisma from "../lib/prisma";
+import { productSchema } from "../models/product";
 
 export const getProducts = async (req: Request, res: Response) => {
   try {
@@ -13,7 +14,14 @@ export const getProducts = async (req: Request, res: Response) => {
 
 export const addProduct = async (req: Request, res: Response) => {
   try {
-    const { name, description, price, imageUrl, category } = req.body;
+    const productData = productSchema.safeParse(req.body);
+    if (!productData.success) {
+      res.status(411).json({
+        error: productData.error,
+      });
+      return;
+    }
+    const { name, description, price, imageUrl, category } = productData.data;
     const categoryId = category.toUpperCase();
     const userId: number | undefined = req.userId;
     const isAdmin = req.isAdmin;
@@ -55,8 +63,15 @@ export const addProduct = async (req: Request, res: Response) => {
 export const updateProduct = async (req: Request, res: Response) => {
   try {
     const productId: number = Number(req.params.id);
-    const { name, description, price, imageUrl, category } = req.body;
-    const categoryId: string = category.toUpperCase();
+    const productData = productSchema.safeParse(req.body);
+    if (!productData.success) {
+      res.status(411).json({
+        error: productData.error,
+      });
+      return;
+    }
+    const { name, description, price, imageUrl, category } = productData.data;
+    const categoryId = category.toUpperCase();
     const userId: number | undefined = req.userId;
     const isAdmin = req.isAdmin;
     if (!isAdmin) {

@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import prisma from "../lib/prisma";
+import { adminSchema } from "../models/admin";
 
 export const getAccountDetails = async (req: Request, res: Response) => {
   try {
@@ -30,7 +31,14 @@ export const getAccountDetails = async (req: Request, res: Response) => {
 export const editAccountDetails = async (req: any, res: any) => {
   try {
     const userId = req.userId;
-    const { password, ...updatedData } = req.body;
+    const adminData = adminSchema.safeParse(req.body);
+    if (!adminData.success) {
+      res.status(411).json({
+        error: adminData.error,
+      });
+      return;
+    }
+    const { password, ...updatedData } = adminData.data;
     const admin = await prisma.admin.findUnique({ where: { id: userId } });
 
     if (!admin) {

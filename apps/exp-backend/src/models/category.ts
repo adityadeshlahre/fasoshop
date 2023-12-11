@@ -11,9 +11,5 @@ export interface CategoryModel {
 }
 
 export const categoryModelSchema = z.object({
-  id: z.number(),
   name: z.string(),
-  createdAt: z.number(),
-  updatedAt: z.number().nullable(),
-  products: z.array(productSchema),
 });

@@ -3,6 +3,8 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import bcrypt from "bcrypt";
 import prisma from "../lib/prisma";
+import { userLoginSchema, userSchema } from "../models/user";
+import { adminLoginSchema, adminSchema } from "../models/admin";
 
 dotenv.config();
 
@@ -17,7 +19,14 @@ const generateToken = (id: number) => {
 
 export const register = async (req: Request, res: Response) => {
   try {
-    const { username, email, password } = req.body;
+    const userData = userSchema.safeParse(req.body);
+    if (!userData.success) {
+      res.status(411).json({
+        error: userData.error,
+      });
+      return;
+    }
+    const { username, email, password } = userData.data;
     const existingUser = await prisma.user.findUnique({
       where: { email },
     });
@@ -46,7 +55,14 @@ export const register = async (req: Request, res: Response) => {
 
 export const login = async (req: Request, res: Response) => {
   try {
-    const { email, password } = req.body;
+    const userData = userLoginSchema.safeParse(req.body);
+    if (!userData.success) {
+      res.status(411).json({
+        error: userData.error,
+      });
+      return;
+    }
+    const { email, password } = userData.data;
     const user = await prisma.user.findUnique({
       where: { email },
     });
@@ -85,7 +101,14 @@ export const login = async (req: Request, res: Response) => {
 
 export const adminRegister = async (req: Request, res: Response) => {
   try {
-    const { username, email, password } = req.body;
+    const adminData = adminSchema.safeParse(req.body);
+    if (!adminData.success) {
+      res.status(411).json({
+        error: adminData.error,
+      });
+      return;
+    }
+    const { username, email, password } = adminData.data;
     const existingAdminUser = await prisma.admin.findUnique({
       where: { email },
     });
@@ -115,7 +138,14 @@ export const adminRegister = async (req: Request, res: Response) => {
 // Admin Login
 export const adminLogin = async (req: Request, res: Response) => {
   try {
-    const { email, password } = req.body;
+    const adminData = adminLoginSchema.safeParse(req.body);
+    if (!adminData.success) {
+      res.status(411).json({
+        error: adminData.error,
+      });
+      return;
+    }
+    const { email, password } = adminData.data;
     const admin = await prisma.admin.findUnique({
       where: { email },
     });

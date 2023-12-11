@@ -19,15 +19,5 @@ export interface OrderModel {
 }
 
 export const orderModelSchema = z.object({
-  id: z.number(),
-  createdAt: z.date(),
-  updatedAt: z.date(),
   status: z.string(),
-  total: z.number(),
-  userId: z.number().nullable(),
-  user: z.array(userSchema).nullable(),
-  adminId: z.number().nullable(),
-  admin: z.array(adminSchema).nullable(),
-  productId: z.number().nullable(),
-  product: z.array(productSchema).nullable(),
 });

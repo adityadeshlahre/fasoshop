@@ -1,9 +1,19 @@
+//need fix [ routes check ]
+
 import { Request, Response } from "express";
 import prisma from "../lib/prisma";
+import { categoryModelSchema } from "../models/category";
 
 export const createCategory = async (req: Request, res: Response) => {
   try {
-    const name = String(req.body.name).toUpperCase();
+    const categoryData = categoryModelSchema.safeParse(req.body);
+    if (!categoryData.success) {
+      res.status(411).json({
+        error: categoryData.error,
+      });
+      return;
+    }
+    const name = categoryData.data.name.toUpperCase();
     if (!name) {
       return res
         .status(400)
@@ -74,7 +84,14 @@ export const deleteCategory = async (req: Request, res: Response) => {
 export const updateCategory = async (req: Request, res: Response) => {
   try {
     const categoryName = String(req.params.name).toUpperCase();
-    const name = String(req.body.name).toUpperCase();
+    const categoryData = categoryModelSchema.safeParse(req.body);
+    if (!categoryData.success) {
+      res.status(411).json({
+        error: categoryData.error,
+      });
+      return;
+    }
+    const name = categoryData.data.name.toUpperCase();
     if (!name) {
       return res
         .status(400)

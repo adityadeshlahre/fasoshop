@@ -7,8 +7,10 @@
 import { Request, Response } from "express";
 import prisma from "../lib/prisma";
 import { fetchProductsForSpecific } from "../lib/fetchProduct";
+import { orderModelSchema } from "../models/order";
 
 export const directOrder = async (req: Request, res: Response) => {
+  //this function fix need
   try {
     const userId: number | undefined = req.userId;
     const isAdmin: boolean = req.isAdmin || false;
@@ -34,8 +36,15 @@ export const directOrder = async (req: Request, res: Response) => {
     if (!product) {
       return res.status(404).json({ error: "Product not found" });
     }
-
-    const orderStatus = req.body.status === "1" ? "completed" : "pending";
+    const orderData = orderModelSchema.safeParse(req.body);
+    if (!orderData.success) {
+      res.status(411).json({
+        error: orderData.error,
+      });
+      return;
+    }
+    const { status } = orderData.data;
+    const orderStatus = status === "1" ? "completed" : "pending";
     const total = product.price;
 
     let order;
@@ -99,7 +108,14 @@ export const order = async (req: Request, res: Response) => {
       return res.json({ message: "Cart is empty" });
     }
     const product = products[0];
-    const { status } = req.body;
+    const orderData = orderModelSchema.safeParse(req.body);
+    if (!orderData.success) {
+      res.status(411).json({
+        error: orderData.error,
+      });
+      return;
+    }
+    const { status } = orderData.data;
     const orderStatus = status === "1" ? "completed" : "pending";
 
     if (status && products.length > 0) {
@@ -176,7 +192,14 @@ export const orderStatusUpdate = async (req: Request, res: Response) => {
         ],
       },
     });
-    const { status } = req.body;
+    const orderData = orderModelSchema.safeParse(req.body);
+    if (!orderData.success) {
+      res.status(411).json({
+        error: orderData.error,
+      });
+      return;
+    }
+    const { status } = orderData.data;
     const orderStatus = status === "1" ? "completed" : "pending";
 
     if (status && orderId) {
@@ -200,9 +223,9 @@ export const orderStatusUpdate = async (req: Request, res: Response) => {
         });
       }
 
-      res.json({ message: "Order placed successfully" });
+      res.json({ message: "Order updated successfully" });
     } else {
-      res.json({ message: "Order wans't successfully placed" });
+      res.json({ message: "Order wans't updated successfully" });
     }
   } catch (error) {
     console.error("Error processing order:", error);
@@ -233,7 +256,6 @@ export const orderDeletion = async (req: Request, res: Response) => {
         ],
       },
     });
-    console.log(orderId);
 
     if (orderId) {
       await prisma.order.deleteMany({

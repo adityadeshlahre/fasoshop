@@ -1,26 +1,23 @@
-//need fix
-
 import { Request, Response } from "express";
 import prisma from "../lib/prisma";
 import { fetchProductsForSpecific } from "../lib/fetchProduct";
+import { cartItemModelSchema } from "../models/cart";
 
 export const deleteCartProduct = async (req: Request, res: Response) => {
   try {
-    const { id: productId } = req.params;
-    const userId = req.userId;
-    const isAdmin = req.isAdmin || false;
+    const { id: cardItemID } = req.params;
 
-    if (!userId || !productId) {
+    if (!cardItemID) {
       return res.status(400).json({ error: "Invalid request" });
     }
-
-    await prisma.cartItem.deleteMany({
+    const deletedCartItem = await prisma.cartItem.delete({
       where: {
-        userId: isAdmin ? null : Number(userId),
-        adminId: isAdmin ? Number(userId) : null,
-        productId: Number(productId),
+        id: Number(cardItemID),
       },
     });
+    if (!deletedCartItem) {
+      return res.status(404).json({ error: "CartItem not found" });
+    }
 
     return res.status(200).json({ message: "Product deleted from the cart" });
   } catch (error) {
@@ -31,23 +28,29 @@ export const deleteCartProduct = async (req: Request, res: Response) => {
 
 export const updateQuantity = async (req: Request, res: Response) => {
   try {
-    const { id: productId } = req.params;
-    const userId = req.userId;
-    const { quantity } = req.body;
-    const isAdmin = req.isAdmin || false;
+    const { id: cardItemID } = req.params;
+    const cartData = cartItemModelSchema.safeParse(req.body);
+    if (!cartData.success) {
+      res.status(411).json({
+        error: cartData.error,
+      });
+      return;
+    }
+    const { quantity } = cartData.data;
 
-    if (!userId || !productId || !quantity || quantity <= 0) {
+    if (!cardItemID || !quantity || quantity <= 0) {
       return res.status(400).json({ error: "Invalid request" });
     }
 
-    await prisma.cartItem.updateMany({
+    const updatingCartItem = await prisma.cartItem.update({
       where: {
-        userId: isAdmin ? null : Number(userId),
-        adminId: isAdmin ? Number(userId) : null,
-        productId: Number(productId),
+        id: Number(cardItemID),
       },
       data: { quantity: Number(quantity) },
     });
+    if (!updatingCartItem) {
+      return res.status(404).json({ error: "CartItem not found" });
+    }
 
     return res.status(200).json({ message: "Quantity updated in the cart" });
   } catch (error) {
