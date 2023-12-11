@@ -19,7 +19,8 @@
     "ts-node": "^10.9.1",
     "tsconfig": "*",
     "turbo": "latest",
-    "typescript": "^5.2.2"
+    "typescript": "^5.2.2",
+    "zod": "^3.22.4"
   },
   "name": "fasoshop",
   "packageManager": "npm@10.1.0",
