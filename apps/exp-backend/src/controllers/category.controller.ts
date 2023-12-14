@@ -30,7 +30,7 @@ export const createCategory = async (req: Request, res: Response) => {
       },
     });
 
-    if (!existingCategory) {
+    if (existingCategory) {
       return res.status(404).json({ error: "Category already exsits" });
     }
     const category = await prisma.category.create({

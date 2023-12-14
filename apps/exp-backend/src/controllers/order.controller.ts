@@ -192,6 +192,10 @@ export const orderStatusUpdate = async (req: Request, res: Response) => {
         ],
       },
     });
+    if (!orderId) {
+      return res.status(404).json({ error: "Order not found" });
+    }
+
     const orderData = orderModelSchema.safeParse(req.body);
     if (!orderData.success) {
       res.status(411).json({
@@ -209,26 +213,28 @@ export const orderStatusUpdate = async (req: Request, res: Response) => {
           status: orderStatus,
         },
       });
+    }
 
-      await prisma.orderHistory.update({
-        where: { id: orderId?.id },
+    if (orderStatus === "completed") {
+      await prisma.orderHistory.create({
         data: {
+          userId: orderId.userId,
+          adminId: orderId.adminId,
+          productId: orderId.productId,
           status: orderStatus,
+          total: orderId.total,
         },
       });
-
-      if (orderStatus === "completed") {
-        await prisma.cartItem.deleteMany({
-          where: { OR: [{ userId: userId }, { adminId: userId }] },
-        });
-      }
-
-      res.json({ message: "Order updated successfully" });
-    } else {
-      res.json({ message: "Order wans't updated successfully" });
+      await prisma.cartItem.deleteMany({
+        where: {
+          OR: [{ userId: orderId.userId }, { adminId: orderId.adminId }],
+        },
+      });
     }
+
+    res.json({ message: "Order updated successfully" });
   } catch (error) {
-    console.error("Error processing order:", error);
+    console.error("Error updating order:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };

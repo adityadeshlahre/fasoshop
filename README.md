@@ -18,7 +18,6 @@
 ## Implementing Soon
 
 - [ ] Zod Validation
-- [ ] Trpc
 - [ ] Next Auth
 - [ ] NextJs Router
 - [ ] Zod-Prisma
