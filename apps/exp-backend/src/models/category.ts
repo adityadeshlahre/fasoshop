@@ -13,3 +13,5 @@ export interface CategoryModel {
 export const categoryModelSchema = z.object({
   name: z.string(),
 });
+
+export type CategoryModelType = z.infer<typeof categoryModelSchema>;
