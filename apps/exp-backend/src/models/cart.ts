@@ -1,5 +1,4 @@
 import { Product, Admin, User } from "../../../../prisma/generated/client";
-import { z } from "zod";
 
 export interface CartItemModel {
   id: number;
@@ -11,9 +10,3 @@ export interface CartItemModel {
   userId?: number | null;
   user?: User | null;
 }
-
-export const cartItemModelSchema = z.object({
-  quantity: z.number().positive(),
-});
-
-export type TCartItemModelSchema = z.infer<typeof cartItemModelSchema>;
