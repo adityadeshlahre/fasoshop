@@ -1,6 +1,5 @@
 import { Product } from "../../../../prisma/generated/client";
 import { z } from "zod";
-import { productSchema } from "./product";
 
 export interface CategoryModel {
   id: number;
@@ -14,4 +13,4 @@ export const categoryModelSchema = z.object({
   name: z.string(),
 });
 
-export type CategoryModelType = z.infer<typeof categoryModelSchema>;
+export type TCategoryModelType = z.infer<typeof categoryModelSchema>;

@@ -10,7 +10,7 @@
 - ExpressJs
 - Prism [ORM]
 - Postgress [DataBase]
-- NextJs
+- NextJs [Without AppRouter]
 - TurboRepo [MonoRepo Management]
 
 ---

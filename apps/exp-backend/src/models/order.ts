@@ -1,8 +1,5 @@
 import { User, Admin, Product } from "../../../../prisma/generated/client";
 import { z } from "zod";
-import { userSchema } from "./user";
-import { adminSchema } from "./admin";
-import { productSchema } from "./product";
 
 export interface OrderModel {
   id: number;

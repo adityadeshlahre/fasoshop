@@ -18,3 +18,6 @@ export const adminLoginSchema = z.object({
   email: z.string().email(),
   password: z.string().min(6).max(12),
 });
+
+export type TAdminSchema = z.infer<typeof adminSchema>;
+export type TAdminLoginSchema = z.infer<typeof adminLoginSchema>;

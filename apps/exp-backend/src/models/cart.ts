@@ -15,3 +15,5 @@ export interface CartItemModel {
 export const cartItemModelSchema = z.object({
   quantity: z.number().positive(),
 });
+
+export type TCartItemModelSchema = z.infer<typeof cartItemModelSchema>;
