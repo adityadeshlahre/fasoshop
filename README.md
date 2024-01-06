@@ -25,3 +25,12 @@
 - [ ] Docker [Maybe]
 - [ ] models.ts to packages
 - [ ] Etc.....
+
+## ToDo
+
+- NextJs Middleware Fix
+- Add Different Components
+  > - category
+  > - cart
+  > - order Page
+  > - product Components fix
