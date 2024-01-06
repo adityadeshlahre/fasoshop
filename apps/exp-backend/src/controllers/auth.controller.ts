@@ -3,8 +3,8 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import bcrypt from "bcrypt";
 import prisma from "../lib/prisma";
-import { userLoginSchema, userSchema } from "../models/user";
-import { adminLoginSchema, adminSchema } from "../models/admin";
+import { userLoginSchema, userSchema } from "../models/types";
+import { adminLoginSchema, adminSchema } from "../models/types";
 
 dotenv.config();
 
