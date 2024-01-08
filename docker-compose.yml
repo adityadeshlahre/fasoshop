@@ -1,0 +1,17 @@
+version: "3"
+
+services:
+  fasoshopdb:
+    image: postgres
+    container_name: fasoshopdb
+    environment:
+      POSTGRES_USER: opensource
+      POSTGRES_PASSWORD: sourceopen
+      POSTGRES_DB: fasoshop
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+volumes:
+  postgres_data: {}

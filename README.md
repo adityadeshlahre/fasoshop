@@ -22,7 +22,7 @@
 - [ ] NextJs Router
 - [ ] Zod-Prisma
 - [ ] Payment System
-- [ ] Docker [Maybe]
+- [x] Docker [Maybe]
 - [ ] models.ts to packages
 - [ ] Etc.....
 
@@ -34,3 +34,4 @@
   > - cart
   > - order Page
   > - product Components fix
+- Dockerfile & docker-compose.yml fixup
